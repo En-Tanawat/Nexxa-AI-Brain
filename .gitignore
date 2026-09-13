@@ -31,3 +31,14 @@ Desktop.ini
 ~$*.docx
 *.tmp
 
+# Local Execution Scripts
+run_web.bat
+stop_server.bat
+
+# Session Memory & Local Logs
+session_memory.md
+SESSION_MEMORY.md
+
+# Automated Test Suites
+tests/
+

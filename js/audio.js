@@ -88,7 +88,7 @@ function speakAI(text, onComplete) {
     lastSpokenText = text.trim();
     isSpeakingNow = true;
     if (window.pauseRecognition) window.pauseRecognition();
-    logInfo("🗣️ AI VOICE", `"${text}"`, "#c084fc");
+    logInfo("AI VOICE", `"${text}"`, "#c084fc");
 
     if (currentAudio) {
         try { currentAudio.pause(); currentAudio.currentTime = 0; } catch (e) {}
@@ -140,7 +140,7 @@ function speakAI(text, onComplete) {
                 }
                 const dur = data.duration_ms;
                 beginTalking();
-                logInfo("🔊 AUDIO SERVER", `เล่นผ่านระบบเครื่อง (${(dur/1000).toFixed(1)} วินาที)`, "#10b981");
+                logInfo("AUDIO SERVER", `เล่นผ่านระบบเครื่อง (${(dur/1000).toFixed(1)} วินาที)`, "#10b981");
                 finishTimeout = setTimeout(finish, dur + 100);
             })
             .catch(() => fallbackWebSpeech(text, finish, beginTalking));
@@ -157,7 +157,7 @@ function speakAI(text, onComplete) {
                 if (!talkStarted && isSpeakingNow && !completed) {
                     talkStarted = true;
                     beginTalking();
-                    logInfo("🔊 AUDIO DIRECT", "เล่นเสียงออกลำโพงแล้ว (เปรมวดี Neural)", "#10b981");
+                    logInfo("AUDIO DIRECT", "เล่นเสียงออกลำโพงแล้ว (เปรมวดี Neural)", "#10b981");
                 }
             };
 

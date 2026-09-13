@@ -283,7 +283,7 @@ function handleRobotCommand(res, action, target, fromDashboard = false, fromRobo
         console.log(`   >> กำลังสั่งฮาร์ดแวร์: นำทางไปยังสถานี '${target}'...`);
         statusMsg = 'navigating';
     } else if (action === 'SAFETY_ALERT') {
-        console.log(`   >> ⚠️ แจ้งเตือนความปลอดภัยฮาร์ดแวร์: '${target}'!`);
+        console.log(`   >> [SAFETY ALERT] แจ้งเตือนความปลอดภัยฮาร์ดแวร์: '${target}'!`);
         PLAYER.stop();
         statusMsg = 'safety_alert';
     } else if (action === 'CLARIFY') {
@@ -653,7 +653,7 @@ server.listen(PORT, () => {
 
     if (localIPs.length > 0) {
         console.log('');
-        console.log('📱 เปิดบนโทรศัพท์/แท็บเล็ต (เชื่อม WiFi เดียวกัน):');
+        console.log('[MOBILE] เปิดบนโทรศัพท์/แท็บเล็ต (เชื่อม WiFi เดียวกัน):');
         for (const ip of localIPs) {
             console.log(`   -> http://${ip.address}:${PORT}  (${ip.name})`);
         }

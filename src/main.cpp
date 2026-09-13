@@ -158,7 +158,7 @@ void handleCommand() {
     statusMsg = "navigating";
 
   } else if (action == "SAFETY_ALERT") {
-    Serial.printf(">> ⚠️ เหตุขัดข้องความปลอดภัย: '%s' -> หยุดฉุกเฉินทันที!\n", target.c_str());
+    Serial.printf(">> [SAFETY ALERT] เหตุขัดข้องความปลอดภัย: '%s' -> หยุดฉุกเฉินทันที!\n", target.c_str());
     digitalWrite(STATUS_LED, LOW);
     statusMsg = "safety_alert";
 

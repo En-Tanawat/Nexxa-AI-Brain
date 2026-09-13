@@ -1251,15 +1251,15 @@
                         </div>
 
                         <a href="/" target="_blank" class="btn-robot-screen" title="เปิดหน้าจอหุ่นยนต์ OLED Face" style="padding: 7px 14px; font-size: 0.82rem; text-decoration: none;">
-                            🤖 Robot Screen
+                            Robot Screen
                         </a>
 
                         <button class="btn-submit-action" onclick="openVoiceModal()" style="padding: 7px 14px; border-radius: 9999px; background: var(--accent-purple); font-size: 0.82rem;">
-                            🎙️ Voice Sim
+                            Voice Sim
                         </button>
 
                         <button class="btn-submit-action" onclick="openCommandModal()" style="padding: 7px 16px; border-radius: 9999px; font-size: 0.82rem;">
-                            ⚡ Action Command
+                            Action Command
                         </button>
                     </div>
                 </div>
@@ -1278,31 +1278,31 @@
                         <div class="blue-progress-card">
                             <div class="card-head">
                                 <h4>Quick Actions</h4>
-                                <span style="font-size: 0.75rem; opacity: 0.85;">⚡</span>
+                                <span style="font-size: 0.75rem; opacity: 0.85;">[ACT]</span>
                             </div>
                             <div class="action-pills-list">
                                 <button class="action-white-pill" onclick="sendActionCommand('PICK')">
-                                    <span>📦 PICK (หยิบขวดน้ำ)</span>
+                                    <span>PICK (หยิบขวดน้ำ)</span>
                                     <span>›</span>
                                 </button>
                                 <button class="action-white-pill" onclick="sendActionCommand('HOME')">
-                                    <span>🏠 HOME (กลับฐาน)</span>
+                                    <span>HOME (กลับฐาน)</span>
                                     <span>›</span>
                                 </button>
                                 <button class="action-white-pill btn-red" onclick="sendActionCommand('STOP')">
-                                    <span>🛑 STOP (หยุดฉุกเฉิน)</span>
+                                    <span>STOP (หยุดฉุกเฉิน)</span>
                                     <span>›</span>
                                 </button>
                                 <button class="action-white-pill" onclick="sendActionCommand('CheckStatus')">
-                                    <span>🔍 CheckStatus</span>
+                                    <span>CheckStatus</span>
                                     <span>›</span>
                                 </button>
                                 <button class="action-white-pill btn-purple" onclick="sendActionCommand('AnswerQuestion')">
-                                    <span>💬 Q&A Mode</span>
+                                    <span>Q&A Mode</span>
                                     <span>›</span>
                                 </button>
                                 <button class="action-white-pill" onclick="sendActionCommand('StopQA')">
-                                    <span>⏹️ StopQA (หยุดตอบ)</span>
+                                    <span>StopQA (หยุดตอบ)</span>
                                     <span>›</span>
                                 </button>
                             </div>
@@ -1329,29 +1329,29 @@
                         <div class="milestones-cloud" id="milestonesCloud">
                             <div class="milestone-pill-row" style="margin-left: 10%;">
                                 <div class="timeline-milestone-pill pill-blue" onclick="openCommandModal()">
-                                    <div class="milestone-avatar">📦</div>
+                                    <div class="milestone-avatar" style="font-size: 0.7rem; font-weight: 700;">ARM</div>
                                     <div>
                                         <div style="font-size: 0.76rem; font-weight: 700;">PICK Command</div>
                                         <div style="font-size: 0.65rem; color: var(--text-muted);">Action: bottle</div>
                                     </div>
-                                    <div class="milestone-badge-check">✓</div>
+                                    <div class="milestone-badge-check">OK</div>
                                 </div>
                             </div>
 
                             <div class="milestone-pill-row" style="margin-left: 28%;">
                                 <div class="timeline-milestone-pill pill-green" onclick="sendActionCommand('CheckStatus')">
-                                    <div class="milestone-avatar">📡</div>
+                                    <div class="milestone-avatar" style="font-size: 0.7rem; font-weight: 700;">NET</div>
                                     <div>
                                         <div style="font-size: 0.76rem; font-weight: 700;">ESP32 Gateway</div>
                                         <div style="font-size: 0.65rem; color: var(--text-muted);" id="timelineEspStatus">Ready 100%</div>
                                     </div>
-                                    <div class="milestone-badge-check">✓</div>
+                                    <div class="milestone-badge-check">OK</div>
                                 </div>
                             </div>
 
                             <div class="milestone-pill-row" style="margin-left: 45%;">
                                 <div class="timeline-milestone-pill pill-purple" onclick="openVoiceModal()">
-                                    <div class="milestone-avatar">🧠</div>
+                                    <div class="milestone-avatar" style="font-size: 0.7rem; font-weight: 700;">AI</div>
                                     <div>
                                         <div style="font-size: 0.76rem; font-weight: 700;">Gemini 3.5 Flash</div>
                                         <div style="font-size: 0.65rem; color: var(--text-muted);">Strict Wake: 15s Window</div>
@@ -1362,12 +1362,12 @@
 
                             <div class="milestone-pill-row" style="margin-left: 20%;">
                                 <div class="timeline-milestone-pill pill-amber" onclick="testSpeakPC()">
-                                    <div class="milestone-avatar">🔊</div>
+                                    <div class="milestone-avatar" style="font-size: 0.7rem; font-weight: 700;">TTS</div>
                                     <div>
                                         <div style="font-size: 0.76rem; font-weight: 700;">Single Voice</div>
                                         <div style="font-size: 0.65rem; color: var(--text-muted);">เปรมวดี Neural (Edge TTS)</div>
                                     </div>
-                                    <div class="milestone-badge-check">✓</div>
+                                    <div class="milestone-badge-check">OK</div>
                                 </div>
                             </div>
                         </div>
@@ -1500,23 +1500,23 @@
                         <p class="card-subtitle">สตรีมข้อมูลรับ-ส่ง (Telemetry Events Stream)</p>
                     </div>
                     <div style="display: flex; gap: 4px;">
-                        <button class="pill-filter-btn" id="btnPauseScroll" onclick="toggleAutoScroll()">⏸️ Auto</button>
-                        <button class="pill-filter-btn" onclick="clearEventStream()">🗑️ Clear</button>
-                        <button class="pill-filter-btn" onclick="exportEventsJson()">📥 Export</button>
+                        <button class="pill-filter-btn" id="btnPauseScroll" onclick="toggleAutoScroll()">Auto Scroll</button>
+                        <button class="pill-filter-btn" onclick="clearEventStream()">Clear</button>
+                        <button class="pill-filter-btn" onclick="exportEventsJson()">Export</button>
                     </div>
                 </div>
 
                 <!-- Filter Tabs (Strictly Input & ESP32) -->
                 <div class="filter-tabs-row">
                     <button class="pill-filter-btn active" data-filter="ALL" onclick="setFilter('ALL', this)">ทั้งหมด (Input + ESP32)</button>
-                    <button class="pill-filter-btn" data-filter="INCOMING" onclick="setFilter('INCOMING', this)">⬇️ Input รับเข้า</button>
-                    <button class="pill-filter-btn" data-filter="OUTGOING" onclick="setFilter('OUTGOING', this)">📡 ESP32 ส่งออก</button>
+                    <button class="pill-filter-btn" data-filter="INCOMING" onclick="setFilter('INCOMING', this)">Input รับเข้า</button>
+                    <button class="pill-filter-btn" data-filter="OUTGOING" onclick="setFilter('OUTGOING', this)">ESP32 ส่งออก</button>
                 </div>
 
                 <!-- Scrollable Activity Stream List (Preserves id="streamFeed") -->
                 <div class="stream-feed-list" id="streamFeed">
                     <div id="streamEmptyState" style="text-align: center; padding: 40px 10px; color: var(--text-muted);">
-                        <div style="font-size: 2rem; margin-bottom: 8px;">📡</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; color: var(--primary-blue);">[STREAM FEED]</div>
                         <div style="font-weight: 700; font-size: 0.9rem;">กำลังรอรับข้อมูลจาก ESP32 และ Nexxa AI...</div>
                         <div style="font-size: 0.76rem; margin-top: 4px;">กิจกรรมเสียง คำสั่ง และการเคลื่อนไหวจะปรากฏขึ้นที่นี่แบบเรียลไทม์</div>
                     </div>
@@ -1573,10 +1573,10 @@
                     <!-- Voice Audio Quick Test -->
                     <div style="display: flex; gap: 8px; margin-top: 6px;">
                         <button class="btn-robot-screen" style="flex: 1; justify-content: center;" onclick="testSpeakPC()">
-                            🔈 PC Speaker
+                            PC Speaker
                         </button>
                         <button class="btn-robot-screen" style="flex: 1; justify-content: center; background: var(--bg-hover); color: var(--text-secondary); border-color: var(--border-light);" onclick="testStreamTTS()">
-                            🎧 Browser MP3
+                            Browser MP3
                         </button>
                     </div>
                 </div>
@@ -1590,36 +1590,34 @@
     <div class="modal-overlay" id="commandModal">
         <div class="modal-box">
             <div class="modal-header">
-                <h3>🚀 ส่งคำสั่งควบคุม ESP32 & จำลองเสียง</h3>
-                <button class="btn-close-modal" onclick="closeCommandModal()">✕</button>
+                <h3>ส่งคำสั่งควบคุม ESP32 & จำลองเสียง</h3>
+                <button class="btn-close-modal" onclick="closeCommandModal()">&times;</button>
             </div>
             <div class="modal-body">
                 
-                <!-- Section 1: PICK Target -->
-                <div>
                 <!-- Section 1: Line Tracking & Navigation -->
                 <div>
-                    <div class="modal-section-title">🚀 ระบบเดินตามเส้น & สถานี (Line Tracking & Stations)</div>
+                    <div class="modal-section-title">ระบบเดินตามเส้น & สถานี (Line Tracking & Stations)</div>
                     <div class="actions-2col-grid" style="margin-bottom: 8px;">
                         <button class="btn-modal-action" style="background: rgba(16, 185, 129, 0.08); color: #059669; border-color: rgba(16, 185, 129, 0.3);" onclick="sendActionCommand('START_LINE_TRACK', 'line')">
-                            <span>🚀</span> เริ่มเดินตามเส้น
+                            <span>[START]</span> เริ่มเดินตามเส้น
                         </button>
                         <button class="btn-modal-action" style="background: rgba(239, 68, 68, 0.08); color: #dc2626; border-color: rgba(239, 68, 68, 0.3);" onclick="sendActionCommand('STOP_LINE_TRACK', 'line')">
-                            <span>⏹️</span> หยุดเดินตามเส้น
+                            <span>[STOP]</span> หยุดเดินตามเส้น
                         </button>
                     </div>
                     <div class="chips-cloud" style="margin-bottom: 6px;">
-                        <div class="target-chip" onclick="sendActionCommand('NAVIGATE_TO', 'station_a')">📍 ไปสถานี A</div>
-                        <div class="target-chip" onclick="sendActionCommand('NAVIGATE_TO', 'station_b')">📍 ไปสถานี B</div>
-                        <div class="target-chip" onclick="sendActionCommand('NAVIGATE_TO', 'pickup_point')">📦 ไปจุดรับของ</div>
-                        <div class="target-chip" onclick="sendActionCommand('NAVIGATE_TO', 'drop_point')">📥 ไปจุดส่งของ</div>
-                        <div class="target-chip" onclick="sendActionCommand('HOME')">🏠 กลับฐานชาร์จ</div>
+                        <div class="target-chip" onclick="sendActionCommand('NAVIGATE_TO', 'station_a')">ไปสถานี A</div>
+                        <div class="target-chip" onclick="sendActionCommand('NAVIGATE_TO', 'station_b')">ไปสถานี B</div>
+                        <div class="target-chip" onclick="sendActionCommand('NAVIGATE_TO', 'pickup_point')">ไปจุดรับของ</div>
+                        <div class="target-chip" onclick="sendActionCommand('NAVIGATE_TO', 'drop_point')">ไปจุดส่งของ</div>
+                        <div class="target-chip" onclick="sendActionCommand('HOME')">กลับฐานชาร์จ</div>
                     </div>
                 </div>
 
                 <!-- Section 2: Robotic Arm & Object Handling -->
                 <div>
-                    <div class="modal-section-title">🦾 แขนกล & วัตถุ (Robotic Arm: Pick / Place / Move)</div>
+                    <div class="modal-section-title">แขนกล & วัตถุ (Robotic Arm: Pick / Place / Move)</div>
                     <div class="chips-cloud" style="margin-bottom: 8px;">
                         <div class="target-chip active" onclick="selectChip(this, 'ขวดน้ำ')">ขวดน้ำ</div>
                         <div class="target-chip" onclick="selectChip(this, 'กล่องพัสดุ')">กล่องพัสดุ</div>
@@ -1636,46 +1634,46 @@
 
                 <!-- Section 3: Safety Fault Simulators (ขอบเขตข้อ 7) -->
                 <div>
-                    <div class="modal-section-title">🚨 ระบบความปลอดภัย & แจ้งเตือนเหตุขัดข้อง (Safety Alerts)</div>
+                    <div class="modal-section-title">ระบบความปลอดภัย & แจ้งเตือนเหตุขัดข้อง (Safety Alerts)</div>
                     <div class="actions-2col-grid">
                         <button class="btn-modal-action danger" onclick="sendActionCommand('SAFETY_ALERT', 'obstacle')">
-                            <span>⚠️</span> สิ่งกีดขวาง (Obstacle)
+                            <span>[ALERT]</span> สิ่งกีดขวาง (Obstacle)
                         </button>
                         <button class="btn-modal-action danger" onclick="sendActionCommand('SAFETY_ALERT', 'object_dropped')">
-                            <span>⚠️</span> วัตถุหลุดจากแขนกล
+                            <span>[ALERT]</span> วัตถุหลุดจากแขนกล
                         </button>
                         <button class="btn-modal-action danger" onclick="sendActionCommand('SAFETY_ALERT', 'line_off_track')">
-                            <span>⚠️</span> ออกนอกเส้นทาง
+                            <span>[ALERT]</span> ออกนอกเส้นทาง
                         </button>
                         <button class="btn-modal-action danger" onclick="sendActionCommand('STOP')">
-                            <span>🛑</span> STOP (หยุดฉุกเฉิน)
+                            <span>[STOP]</span> STOP (หยุดฉุกเฉิน)
                         </button>
                     </div>
                 </div>
 
                 <!-- Section 3.5: ESP32 Hardware Task Feedback Simulators (ขอบเขตข้อ 5) -->
                 <div>
-                    <div class="modal-section-title">🤖 จำลองสถานะตอบกลับจาก ESP32 (Hardware Task Feedback)</div>
+                    <div class="modal-section-title">จำลองสถานะตอบกลับจาก ESP32 (Hardware Task Feedback)</div>
                     <div style="font-size: 0.78rem; color: #64748b; margin-bottom: 8px;">จำลองเซนเซอร์หรือแขนกล ESP32 ส่งผลการหยิบ/ภารกิจกลับมาให้ AI Brain:</div>
                     <div class="actions-2col-grid">
                         <button class="btn-modal-action" style="background: rgba(16, 185, 129, 0.08); color: #059669; border-color: rgba(16, 185, 129, 0.3);" onclick="sendTaskFeedback('PICK', 'success', 'ขวดน้ำ', 'sensor_confirmed')">
-                            <span>✅</span> หยิบขวดน้ำสำเร็จ
+                            <span>[SUCCESS]</span> หยิบขวดน้ำสำเร็จ
                         </button>
                         <button class="btn-modal-action" style="background: rgba(239, 68, 68, 0.08); color: #dc2626; border-color: rgba(239, 68, 68, 0.3);" onclick="sendTaskFeedback('PICK', 'failed', 'ขวดน้ำ', 'gripper_empty')">
-                            <span>❌</span> หยิบขวดน้ำไม่สำเร็จ
+                            <span>[FAILED]</span> หยิบขวดน้ำไม่สำเร็จ
                         </button>
                         <button class="btn-modal-action" style="background: rgba(59, 130, 246, 0.08); color: #2563eb; border-color: rgba(59, 130, 246, 0.3);" onclick="sendTaskFeedback('NAVIGATE_TO', 'success', 'สถานี A', 'reached_station_a')">
-                            <span>📍</span> ถึงสถานี A
+                            <span>[NAV]</span> ถึงสถานี A
                         </button>
                         <button class="btn-modal-action" style="background: rgba(16, 185, 129, 0.08); color: #059669; border-color: rgba(16, 185, 129, 0.3);" onclick="sendTaskFeedback('START_LINE_TRACK', 'success', 'line', 'line_track_completed')">
-                            <span>🏁</span> เดินตามเส้นเสร็จสิ้น
+                            <span>[DONE]</span> เดินตามเส้นเสร็จสิ้น
                         </button>
                     </div>
                 </div>
 
                 <!-- Section 4: Text Communication (ขอบเขตข้อ 1) -->
                 <div>
-                    <div class="modal-section-title">💬 สื่อสารด้วยข้อความ (Text Chat Communication)</div>
+                    <div class="modal-section-title">สื่อสารด้วยข้อความ (Text Chat Communication)</div>
                     <div class="input-inline-row">
                         <input type="text" id="chatTextInput" class="text-input-field" placeholder="พิมพ์คำสั่งสั่งงานหุ่นยนต์..." onkeydown="if(event.key==='Enter') sendTextMessage()">
                         <button class="btn-submit-action" style="background: var(--primary-blue);" onclick="sendTextMessage()">ส่งข้อความ</button>
@@ -1684,7 +1682,7 @@
 
                 <!-- Section 5: Voice Simulation -->
                 <div>
-                    <div class="modal-section-title">🎙️ จำลองคำพูดผู้ใช้ (Voice Pipeline Simulation)</div>
+                    <div class="modal-section-title">จำลองคำพูดผู้ใช้ (Voice Pipeline Simulation)</div>
                     <div class="chips-cloud" style="margin-bottom: 8px;">
                         <div class="target-chip" onclick="setSimInput('nexxa')">ปลุก "nexxa"</div>
                         <div class="target-chip" onclick="setSimInput('hello nexxa เริ่มเดินตามเส้น')">เริ่มเดินตามเส้น</div>
@@ -1703,16 +1701,16 @@
 
                 <!-- Section 6: Direct Actions Grid -->
                 <div>
-                    <div class="modal-section-title">⚡ คำสั่งเสริม (Auxiliary Actions)</div>
+                    <div class="modal-section-title">คำสั่งเสริม (Auxiliary Actions)</div>
                     <div class="actions-2col-grid">
                         <button class="btn-modal-action" onclick="sendActionCommand('CheckStatus')">
-                            <span>🔍</span> CheckStatus
+                            <span>[STATUS]</span> CheckStatus
                         </button>
                         <button class="btn-modal-action" onclick="sendActionCommand('AnswerQuestion')">
-                            <span>💬</span> AnswerQuestion
+                            <span>[QA]</span> AnswerQuestion
                         </button>
                         <button class="btn-modal-action" onclick="sendActionCommand('StopQA')" style="grid-column: span 2;">
-                            <span>⏹️</span> StopQA (ให้หยุดตอบ)
+                            <span>[STOP]</span> StopQA (ให้หยุดตอบ)
                         </button>
                     </div>
                 </div>
@@ -1869,7 +1867,7 @@
             div.className = 'activity-item';
 
             const isInput = ev.direction === 'INCOMING' || ev.type === 'USER_INPUT' || ev.type === 'SIMULATED_VOICE';
-            let iconEmoji = '📡';
+            let iconBadge = 'NET';
             let badgeClass = 'badge-out';
             let dirLabel = 'ESP32';
             let title = '';
@@ -1877,10 +1875,10 @@
 
             if (ev.type === 'ROBOT_TASK_RESULT') {
                 const isSuccess = (ev.status === 'success' || ev.status === 'completed');
-                iconEmoji = isSuccess ? '✅' : '❌';
+                iconBadge = isSuccess ? 'OK' : 'ERR';
                 badgeClass = isSuccess ? 'badge-in' : 'badge-out';
                 dirLabel = 'ESP32 FEEDBACK';
-                title = `🤖 ผลการปฏิบัติงาน ESP32: [${ev.action}] - ${isSuccess ? 'สำเร็จ (SUCCESS)' : 'ไม่สำเร็จ (FAILED)'}`;
+                title = `ผลการปฏิบัติงาน ESP32: [${ev.action}] - ${isSuccess ? 'สำเร็จ (SUCCESS)' : 'ไม่สำเร็จ (FAILED)'}`;
                 bodyText = `
                     <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 2px;">
                         <span>Action: <strong style="color: ${isSuccess ? '#059669' : '#dc2626'}; font-size: 0.96rem;">${ev.action}</strong></span>
@@ -1890,10 +1888,10 @@
                     </div>
                 `;
             } else if (isInput) {
-                iconEmoji = '🗣️';
+                iconBadge = 'IN';
                 badgeClass = 'badge-in';
                 dirLabel = 'INPUT';
-                title = ev.badge || '🗣️ INPUT (คำพูดรับเข้า)';
+                title = ev.badge || 'INPUT (คำพูดรับเข้า)';
                 const transcript = ev.transcript || ev.text || ev.message || '';
                 const cleanText = transcript
                     .replace(/^ผู้ใช้พูด:\s*"?/, '')
@@ -1902,10 +1900,10 @@
                     .replace(/^"|"$/g, '');
                 bodyText = `<div style="font-size: 0.96rem; font-weight: 600; color: #0f172a;">"${cleanText}"</div>`;
             } else {
-                iconEmoji = '🚀';
+                iconBadge = 'OUT';
                 badgeClass = 'badge-out';
                 dirLabel = 'ESP32';
-                title = `📡 ส่งคำสั่งฮาร์ดแวร์ ESP32 [${ev.action}]`;
+                title = `ส่งคำสั่งฮาร์ดแวร์ ESP32 [${ev.action}]`;
                 bodyText = `
                     <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 2px;">
                         <span>คำสั่ง Action: <strong style="color: #0284c7; font-size: 0.96rem;">${ev.action}</strong></span>
@@ -1919,7 +1917,7 @@
             const jsonId = 'json-' + Math.random().toString(36).substr(2, 6);
 
             div.innerHTML = `
-                <div class="activity-icon-wrap">${iconEmoji}</div>
+                <div class="activity-icon-wrap" style="font-size: 0.72rem; font-weight: 800; color: var(--primary-blue);">${iconBadge}</div>
                 <div class="activity-content">
                     <div class="activity-title-row">
                         <span class="activity-title">${title}</span>
@@ -1930,7 +1928,7 @@
                     </div>
                     <div class="activity-desc">${bodyText}</div>
                     <div>
-                        <span class="details-toggle-btn" onclick="toggleJson('${jsonId}', this)">▶ ดูข้อมูล JSON ละเอียด</span>
+                        <span class="details-toggle-btn" onclick="toggleJson('${jsonId}', this)">[+] ดูข้อมูล JSON ละเอียด</span>
                         <pre class="json-details-pre" id="${jsonId}">${JSON.stringify(ev, null, 2)}</pre>
                     </div>
                 </div>
@@ -1944,7 +1942,7 @@
                 elem.classList.toggle('open');
                 const isOpen = elem.classList.contains('open');
                 if (btn) {
-                    btn.innerText = isOpen ? '▼ ซ่อนข้อมูล JSON' : '▶ ดูข้อมูล JSON ละเอียด';
+                    btn.innerText = isOpen ? '[-] ซ่อนข้อมูล JSON' : '[+] ดูข้อมูล JSON ละเอียด';
                 }
             }
         }
@@ -1990,7 +1988,7 @@
                 });
                 const data = await res.json();
                 const targetText = target ? ` (${target})` : '';
-                showToast(`⚡ ส่งคำสั่ง ${action}${targetText} ไปยังหน้าจอ UI เรียบร้อยแล้ว`);
+                showToast(`ส่งคำสั่ง ${action}${targetText} ไปยังหน้าจอ UI เรียบร้อยแล้ว`);
                 closeCommandModal();
             } catch (err) {
                 showToast(`ส่งคำสั่งขัดข้อง: ${err.message}`);
@@ -2011,8 +2009,8 @@
                     })
                 });
                 const data = await res.json();
-                const icon = status === 'success' ? '✅' : '❌';
-                showToast(`${icon} จำลองสถานะตอบกลับ: ${action} (${status}) -> ส่งไปยัง AI Brain เรียบร้อย`);
+                const statusTag = status === 'success' ? '[SUCCESS]' : '[FAILED]';
+                showToast(`${statusTag} จำลองสถานะตอบกลับ: ${action} (${status}) -> ส่งไปยัง AI Brain เรียบร้อย`);
                 closeCommandModal();
             } catch (err) {
                 showToast(`ส่งผลลัพธ์ขัดข้อง: ${err.message}`);
@@ -2031,7 +2029,7 @@
                     body: JSON.stringify({
                         type: 'USER_INPUT',
                         direction: 'INCOMING',
-                        badge: '💬 USER CHAT (ข้อความ)',
+                        badge: 'USER CHAT (ข้อความ)',
                         message: text,
                         transcript: text
                     })
@@ -2040,7 +2038,7 @@
                 // ส่งไปยัง Robot UI ให้ AI ประมวลผลและตอบกลับ
                 const simUrl = `/command?action=SIMULATE_VOICE&transcript=${encodeURIComponent(text)}&fromDashboard=1`;
                 await fetch(simUrl, { headers: { 'X-From-Dashboard': '1' } });
-                showToast(`💬 ส่งข้อความไปยัง AI: "${text}"`);
+                showToast(`ส่งข้อความไปยัง AI: "${text}"`);
                 input.value = '';
                 closeCommandModal();
             } catch (e) {
@@ -2096,7 +2094,7 @@
                     body: JSON.stringify({
                         type: 'SIMULATED_VOICE',
                         direction: 'INCOMING',
-                        badge: '🗣️ VOICE SIMULATION',
+                        badge: 'VOICE SIMULATION',
                         message: `จำลองคำพูดมนุษย์: "${text}"`,
                         transcript: text,
                         fromDashboard: true,
@@ -2122,7 +2120,7 @@
             if (filtered.length === 0) {
                 feed.innerHTML = `
                     <div style="text-align: center; padding: 40px 10px; color: var(--text-muted);">
-                        <div style="font-size: 1.8rem; margin-bottom: 6px;">🔍</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; color: var(--text-muted);">[EMPTY]</div>
                         <div style="font-weight: 600;">ไม่พบรายการสำหรับตัวกรอง "${type}"</div>
                     </div>
                 `;
@@ -2138,12 +2136,12 @@
             autoScroll = !autoScroll;
             const btn = document.getElementById('btnPauseScroll');
             if (autoScroll) {
-                btn.innerText = '⏸️ Auto';
+                btn.innerText = 'Auto Scroll';
                 btn.classList.remove('active');
                 const feed = document.getElementById('streamFeed');
                 feed.scrollTop = feed.scrollHeight;
             } else {
-                btn.innerText = '▶️ Manual';
+                btn.innerText = 'Manual Scroll';
                 btn.classList.add('active');
             }
         }
@@ -2159,7 +2157,7 @@
                 const feed = document.getElementById('streamFeed');
                 feed.innerHTML = `
                     <div id="streamEmptyState" style="text-align: center; padding: 40px 10px; color: var(--text-muted);">
-                        <div style="font-size: 2rem; margin-bottom: 8px;">📡</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; color: var(--primary-blue);">[STREAM FEED]</div>
                         <div style="font-weight: 700; font-size: 0.9rem;">ล้างสตรีมเรียบร้อยแล้ว</div>
                     </div>
                 `;
@@ -2219,11 +2217,11 @@
             if (sessionInterval) {
                 clearInterval(sessionInterval);
                 sessionInterval = null;
-                btn.innerText = '▶';
+                btn.innerText = 'START';
                 showToast('พักการนับเวลา');
             } else {
                 sessionInterval = setInterval(updateDigitalClock, 1000);
-                btn.innerText = '⏸';
+                btn.innerText = 'PAUSE';
                 showToast('กำลังจับเวลาเรียลไทม์');
             }
         }

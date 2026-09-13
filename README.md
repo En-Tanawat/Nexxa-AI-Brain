@@ -1,4 +1,4 @@
-# 🧠 Nexxa AI Brain (หุ่นยนต์ผู้ช่วยอัจฉริยะเน็กซ่า)
+# Nexxa AI Brain (หุ่นยนต์ผู้ช่วยอัจฉริยะเน็กซ่า)
 
 [![Node.js](https://img.shields.io/badge/Node.js-v18%2B-green.svg)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -10,20 +10,20 @@
 
 ---
 
-## ✨ คุณสมบัติเด่น (Key Features)
+## คุณสมบัติเด่น (Key Features)
 
-- 🎙️ **Always-On Zero-Click Voice Pipeline:** ระบบรับฟังเสียงภาษาไทยตลอดเวลา พร้อมทำงานทันทีเมื่อเปิดเบราว์เซอร์โดยไม่ต้องคลิกหน้าจอ
-- 🔒 **Strict Wake Word Gating (15s Window):** ป้องกันการสั่งงานโดยไม่ตั้งใจ ต้องปลุกด้วยคำว่า `"hello nexxa"`, `"nexxa"`, `"เน็กซ่า"` และเปิดหน้าต่างเวลารอรับคำสั่ง 15 วินาที
-- 🤖 **Cyber-Blue OLED Robot Face:** หน้าจอแสดงผลใบหน้าหุ่นยนต์ Responsive SVG ขยับตาและปากพูด (Lip-sync) สอดคล้องกับจังหวะเสียงสังเคราะห์
-- 🔊 **Authoritative Thai Neural Voice:** เปล่งเสียงพูดภาษาไทยสไตล์ธรรมชาติและน่าเชื่อถือด้วยเสียงเดี่ยวมาตรฐาน `th-TH-PremwadeeNeural` ผ่านระบบเสียงระบบปฏิบัติการ Windows (Bypass Browser Autoplay Restrictions)
-- 🧠 **Hybrid Intelligent Decision Making:** ถอดรหัสคำสั่งด้วย Google Gemini 3.5 Flash Lite พร้อมระบบ Local Smart NLP สำรองในกรณีออฟไลน์
-- 🔄 **Bidirectional Hardware Feedback Loop:** ส่งคำสั่งการเคลื่อนที่และแขนกลไปยัง ESP32 (`/command`) พร้อมรับรายงานผลลัพธ์ (`/api/robot_status`) เมื่อหยิบของสำเร็จหรือล้มเหลว เพื่อให้ AI พูดรายงานผู้ใช้โดยอัตโนมัติ
-- 📊 **Real-Time Telemetry & Command Dashboard:** หน้าจอควบคุมและทดสอบระบบ (`dashboard.html`) พร้อมการสตรีมข้อมูลสดผ่าน Server-Sent Events (SSE)
-- 🧪 **100% Automated Test Coverage:** มีชุดทดสอบครอบคลุมทั้งระบบ Baseline, ขอบเขตภารกิจ (Mission Scope), สำเนียงเสียงพูด (Speech Hardening), และการซิงค์ข้อมูลฮาร์ดแวร์
+- **Always-On Zero-Click Voice Pipeline:** ระบบรับฟังเสียงภาษาไทยตลอดเวลา พร้อมทำงานทันทีเมื่อเปิดเบราว์เซอร์โดยไม่ต้องคลิกหน้าจอ
+- **Strict Wake Word Gating (15s Window):** ป้องกันการสั่งงานโดยไม่ตั้งใจ ต้องปลุกด้วยคำว่า `"hello nexxa"`, `"nexxa"`, `"เน็กซ่า"` และเปิดหน้าต่างเวลารอรับคำสั่ง 15 วินาที
+- **Cyber-Blue OLED Robot Face:** หน้าจอแสดงผลใบหน้าหุ่นยนต์ Responsive SVG ขยับตาและปากพูด (Lip-sync) สอดคล้องกับจังหวะเสียงสังเคราะห์
+- **Authoritative Thai Neural Voice:** เปล่งเสียงพูดภาษาไทยสไตล์ธรรมชาติและน่าเชื่อถือด้วยเสียงเดี่ยวมาตรฐาน `th-TH-PremwadeeNeural` ผ่านระบบเสียงระบบปฏิบัติการ Windows (Bypass Browser Autoplay Restrictions)
+- **Hybrid Intelligent Decision Making:** ถอดรหัสคำสั่งด้วย Google Gemini 3.5 Flash Lite พร้อมระบบ Local Smart NLP สำรองในกรณีออฟไลน์
+- **Bidirectional Hardware Feedback Loop:** ส่งคำสั่งการเคลื่อนที่และแขนกลไปยัง ESP32 (`/command`) พร้อมรับรายงานผลลัพธ์ (`/api/robot_status`) เมื่อหยิบของสำเร็จหรือล้มเหลว เพื่อให้ AI พูดรายงานผู้ใช้โดยอัตโนมัติ
+- **Real-Time Telemetry & Command Dashboard:** หน้าจอควบคุมและทดสอบระบบ (`dashboard.html`) พร้อมการสตรีมข้อมูลสดผ่าน Server-Sent Events (SSE)
+- **100% Automated Test Coverage:** มีชุดทดสอบครอบคลุมทั้งระบบ Baseline, ขอบเขตภารกิจ (Mission Scope), สำเนียงเสียงพูด (Speech Hardening), และการซิงค์ข้อมูลฮาร์ดแวร์
 
 ---
 
-## 🏗️ สถาปัตยกรรมระบบ (System Architecture)
+## สถาปัตยกรรมระบบ (System Architecture)
 
 ```
 [ ผู้ใช้งาน (User) ]
@@ -48,7 +48,7 @@
 
 ---
 
-## 📂 โครงสร้างโฟลเดอร์โครงการ (Project Structure)
+## โครงสร้างโฟลเดอร์โครงการ (Project Structure)
 
 ```text
 Nexxa-AI-Brain/
@@ -83,7 +83,7 @@ Nexxa-AI-Brain/
 
 ---
 
-## 🚀 เริ่มต้นใช้งาน (Getting Started)
+## เริ่มต้นใช้งาน (Getting Started)
 
 ### 1. ความต้องการของระบบ (Prerequisites)
 - [Node.js](https://nodejs.org/) เวอร์ชัน 18.0.0 ขึ้นไป
@@ -114,7 +114,7 @@ run_web.bat
 
 ---
 
-## 🧪 การรันแบบทดสอบ (Running Tests)
+## การรันแบบทดสอบ (Running Tests)
 
 ระบบมาพร้อมกับชุดทดสอบแบบครอบคลุม สามารถรันผ่านคำสั่ง:
 
@@ -131,10 +131,10 @@ node tests/test_nexxa_mission_scope.js
 
 ---
 
-## 📡 สเปกการส่ง-รับข้อมูลกับ ESP32 (API Specification)
+## สเปกการส่ง-รับข้อมูลกับ ESP32 (API Specification)
 
 ดูรายละเอียดฉบับเต็มพร้อมไดอะแกรมวงจรและตัวอย่างโค้ด C++ ได้ที่:
-👉 **[`Nexxa_AI_Brain_ESP32_Integration_Manual.md`](Nexxa_AI_Brain_ESP32_Integration_Manual.md)** หรือไฟล์ MS Word **[`Nexxa_AI_Brain_ESP32_Integration_Manual.docx`](Nexxa_AI_Brain_ESP32_Integration_Manual.docx)**
+- [`Nexxa_AI_Brain_ESP32_Integration_Manual.md`](Nexxa_AI_Brain_ESP32_Integration_Manual.md) หรือไฟล์ MS Word [`Nexxa_AI_Brain_ESP32_Integration_Manual.docx`](Nexxa_AI_Brain_ESP32_Integration_Manual.docx)
 
 ### สรุปคำสั่งหลัก (Brain -> ESP32: `POST /command`):
 - `START_LINE_TRACK`: สั่งให้หุ่นยนต์เริ่มเดินตามเส้น
@@ -160,5 +160,5 @@ node tests/test_nexxa_mission_scope.js
 
 ---
 
-## 📄 ใบอนุญาต (License)
+## ใบอนุญาต (License)
 โครงการนี้เผยแพร่ภายใต้ใบอนุญาต **MIT License**

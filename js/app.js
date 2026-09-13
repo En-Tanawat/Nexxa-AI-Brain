@@ -5,22 +5,22 @@
  */
 
 async function processCommandWithAI(commandText) {
-    logInfo("🧠 ANALYZING", `กำลังวิเคราะห์คำสั่ง: "${commandText}"...`, "#f59e0b");
+    logInfo("ANALYZING", `กำลังวิเคราะห์คำสั่ง: "${commandText}"...`, "#f59e0b");
 
     if (aiMode === 'local' || !geminiKey || geminiKey.trim().length < 15) {
-        logInfo("⚡ LOCAL NLP", "ประมวลผลด้วย Smart Local NLP (ออฟไลน์)", "#38bdf8");
+        logInfo("LOCAL NLP", "ประมวลผลด้วย Smart Local NLP (ออฟไลน์)", "#38bdf8");
         const decision = parseWithLocalNLP(commandText);
         executeDecision(decision);
         return;
     }
 
     try {
-        logInfo("🧠 GEMINI BRAIN", `ส่งให้ Google AI Studio (Gemini) ตัดสินใจ: "${commandText}"`, "#a855f7");
+        logInfo("GEMINI BRAIN", `ส่งให้ Google AI Studio (Gemini) ตัดสินใจ: "${commandText}"`, "#a855f7");
         const geminiDecision = await callGeminiAPI(commandText);
-        logInfo("✨ GEMINI DECISION", `Action=${geminiDecision.action || 'NONE'} | เสียงตอบ: "${geminiDecision.speech}"`, "#10b981");
+        logInfo("GEMINI DECISION", `Action=${geminiDecision.action || 'NONE'} | เสียงตอบ: "${geminiDecision.speech}"`, "#10b981");
         executeDecision(geminiDecision);
     } catch (err) {
-        logInfo("⚠️ GEMINI FALLBACK", `Gemini API ขัดข้อง (${err.message}) -> สลับใช้ Smart NLP สำรอง`, "#f59e0b");
+        logInfo("GEMINI FALLBACK", `Gemini API ขัดข้อง (${err.message}) -> สลับใช้ Smart NLP สำรอง`, "#f59e0b");
         const fallbackDecision = parseWithLocalNLP(commandText);
         executeDecision(fallbackDecision);
     }
@@ -28,7 +28,7 @@ async function processCommandWithAI(commandText) {
 
 function executeDecision(decision) {
     const action = decision.action || 'NONE';
-    logInfo("💡 EXECUTING", `Action=${action} | Target=${decision.target || '-'}`, "#10b981");
+    logInfo("EXECUTING", `Action=${action} | Target=${decision.target || '-'}`, "#10b981");
 
     // 1. Action CheckStatus
     if (action === 'CheckStatus') {
@@ -42,7 +42,7 @@ function executeDecision(decision) {
         isAwake = true;
         clearWakeTimer();
         updateWakeVisual(true, true);
-        logInfo("💬 QA MODE ACTIVE", 'เข้าสู่โหมดตอบคำถามต่อเนื่อง (ถามได้เรื่อยๆ จนกว่าจะสั่ง "ให้หยุดตอบ")', "#a855f7");
+        logInfo("QA MODE ACTIVE", 'เข้าสู่โหมดตอบคำถามต่อเนื่อง (ถามได้เรื่อยๆ จนกว่าจะสั่ง "ให้หยุดตอบ")', "#a855f7");
         const reply = decision.speech || "เข้าสู่โหมดตอบคำถามแล้วค่ะ ถามคำถามได้เลยค่ะ";
         speakAI(reply);
         return;
@@ -79,7 +79,7 @@ function executeDecision(decision) {
             // คงสถานะตื่นและเปิดเวลารอรับคำสั่งถัดไป 15 วินาที (ไม่ต้องเรียกปลุกซ้ำ)
             if (typeof startWakeTimer === 'function') {
                 startWakeTimer(false);
-                logInfo("⏳ READY FOR NEXT COMMAND", "ทำตามคำสั่งเรียบร้อยแล้ว ยังคงพร้อมรับคำสั่งถัดไปภายใน 15 วินาที...", "#10b981");
+                logInfo("READY FOR NEXT COMMAND", "ทำตามคำสั่งเรียบร้อยแล้ว ยังคงพร้อมรับคำสั่งถัดไปภายใน 15 วินาที...", "#10b981");
             } else {
                 resetToStandby(true);
             }
@@ -94,21 +94,21 @@ function executeDecision(decision) {
 }
 
 async function processQAQuestion(questionText) {
-    logInfo("🧠 QA THINKING", `กำลังคิดคำตอบ: "${questionText}"...`, "#a855f7");
+    logInfo("QA THINKING", `กำลังคิดคำตอบ: "${questionText}"...`, "#a855f7");
 
     if (aiMode === 'local' || !geminiKey || geminiKey.trim().length < 15) {
         const answer = answerQuestionLocally(questionText);
-        logInfo("⚡ LOCAL QA", `ตอบ: "${answer}"`, "#38bdf8");
+        logInfo("LOCAL QA", `ตอบ: "${answer}"`, "#38bdf8");
         speakAI(answer);
         return;
     }
 
     try {
         const answer = await callGeminiQA(questionText);
-        logInfo("✨ GEMINI QA", `ตอบ: "${answer}"`, "#10b981");
+        logInfo("GEMINI QA", `ตอบ: "${answer}"`, "#10b981");
         speakAI(answer);
     } catch (err) {
-        logInfo("⚠️ GEMINI QA FALLBACK", `Gemini ขัดข้อง (${err.message}) -> สลับใช้ Local QA`, "#f59e0b");
+        logInfo("GEMINI QA FALLBACK", `Gemini ขัดข้อง (${err.message}) -> สลับใช้ Local QA`, "#f59e0b");
         const answer = answerQuestionLocally(questionText);
         speakAI(answer);
     }
@@ -145,7 +145,7 @@ async function requestWakeLock() {
     if ('wakeLock' in navigator) {
         try {
             wakeLock = await navigator.wakeLock.request('screen');
-            logInfo("📱 WAKE LOCK", "เปิด Screen Wake Lock ป้องกันหน้าจอดับแล้ว", "#10b981");
+            logInfo("WAKE LOCK", "เปิด Screen Wake Lock ป้องกันหน้าจอดับแล้ว", "#10b981");
         } catch (err) {}
     }
 }
@@ -170,15 +170,15 @@ function initZeroClickExperience() {
 
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-            logInfo("🎙️ MIC ACCESS", "ไมโครโฟนพร้อมรับฟังคำสั่งเสียงทันที (Zero-Click Ready)", "#10b981");
+            logInfo("MIC ACCESS", "ไมโครโฟนพร้อมรับฟังคำสั่งเสียงทันที (Zero-Click Ready)", "#10b981");
             stream.getTracks().forEach(t => t.stop());
         }).catch(err => {
-            logInfo("⚠️ MIC PERMISSION", `การเข้าถึงไมโครโฟน: ${err.message}`, "#ef4444");
+            logInfo("MIC PERMISSION", `การเข้าถึงไมโครโฟน: ${err.message}`, "#ef4444");
         });
     }
 
     if (window.resumeRecognition) window.resumeRecognition();
-    logInfo("🚀 READY", "เข้าหน้า UI พร้อมทำงานทันที 100% โดยไม่ต้องแตะหน้าจอ", "#10b981");
+    logInfo("READY", "เข้าหน้า UI พร้อมทำงานทันที 100% โดยไม่ต้องแตะหน้าจอ", "#10b981");
 }
 
 // Tap-to-wake: แตะหน้าจอเพื่อปลุกหุ่นยนต์ได้ทันทีเมื่ออยู่ในโหมดหลับ/สแตนด์บาย (เป็นทางเลือกเสริม)
@@ -186,12 +186,12 @@ document.addEventListener('click', (e) => {
     initZeroClickExperience();
     if (typeof isAwake !== 'undefined' && !isAwake) {
         if (e.target && ['INPUT', 'BUTTON', 'A', 'TEXTAREA'].includes(e.target.tagName)) return;
-        logInfo("👆 TAP TO WAKE", 'แตะหน้าจอปลุก Nexxa สำเร็จ (เปิดเวลารอคำสั่ง 15 วินาที)', "#10b981");
+        logInfo("TAP TO WAKE", 'แตะหน้าจอปลุก Nexxa สำเร็จ (เปิดเวลารอคำสั่ง 15 วินาที)', "#10b981");
         if (typeof sendTelemetry === 'function') {
             sendTelemetry({
                 type: 'USER_INPUT',
                 direction: 'INCOMING',
-                badge: '👆 TAP INPUT (แตะหน้าจอ)',
+                badge: 'TAP INPUT (แตะหน้าจอ)',
                 transcript: 'nexxa',
                 message: 'nexxa'
             });
@@ -203,7 +203,7 @@ document.addEventListener('click', (e) => {
 // Keyboard simulation shortcuts
 window.addEventListener('keydown', (e) => {
     const key = e.key.toLowerCase();
-    const sendKeyInput = (text, badge = '⌨️ KEYBOARD INPUT') => {
+    const sendKeyInput = (text, badge = 'KEYBOARD INPUT') => {
         if (typeof sendTelemetry === 'function') {
             sendTelemetry({
                 type: 'USER_INPUT',
@@ -217,42 +217,43 @@ window.addEventListener('keydown', (e) => {
     };
 
     if (key === 'n' || key === ' ') {
-        logInfo("⌨️ SIMULATE", 'กดปุ่ม [N / Space] ปลุก "nexxa" (เปิดเวลา 15 วิ)', "#10b981");
+        logInfo("SIMULATE", 'กดปุ่ม [N / Space] ปลุก "nexxa" (เปิดเวลา 15 วิ)', "#10b981");
         sendKeyInput("nexxa");
     } else if (key === 'w') {
-        logInfo("⌨️ SIMULATE", 'กดปุ่ม [W] จำลองปลุก+สั่งทันที "hello nexxa ไปหยิบขวดน้ำ"', "#00f0ff");
+        logInfo("SIMULATE", 'กดปุ่ม [W] จำลองปลุก+สั่งทันที "hello nexxa ไปหยิบขวดน้ำ"', "#00f0ff");
         sendKeyInput("hello nexxa ไปหยิบขวดน้ำ");
     } else if (key === 't') {
-        logInfo("⌨️ SIMULATE", 'กดปุ่ม [T] จำลองปลุก+เช็คสถานะ "hello nexxa เช็คสถานะ" (CheckStatus)', "#38bdf8");
+        logInfo("SIMULATE", 'กดปุ่ม [T] จำลองปลุก+เช็คสถานะ "hello nexxa เช็คสถานะ" (CheckStatus)', "#38bdf8");
         sendKeyInput("hello nexxa เช็คสถานะ");
     } else if (key === 'q') {
-        logInfo("⌨️ SIMULATE", 'กดปุ่ม [Q] จำลองปลุก+ถามตอบ "hello nexxa ตอบคำถามหน่อย" (AnswerQuestion)', "#a855f7");
+        logInfo("SIMULATE", 'กดปุ่ม [Q] จำลองปลุก+ถามตอบ "hello nexxa ตอบคำถามหน่อย" (AnswerQuestion)', "#a855f7");
         sendKeyInput("hello nexxa ตอบคำถามหน่อย");
     } else if (key === 'z' || key === 'escape') {
-        logInfo("⌨️ SIMULATE", 'กดปุ่ม [Z / Escape] ออกจากโหมดถามตอบ (Exit QA Mode)', "#ef4444");
+        logInfo("SIMULATE", 'กดปุ่ม [Z / Escape] ออกจากโหมดถามตอบ (Exit QA Mode)', "#ef4444");
         sendKeyInput("หยุดตอบ");
     } else if (key === 'p') {
-        logInfo("⌨️ SIMULATE", 'กดปุ่ม [P] จำลองพูด "ไปหยิบขวดน้ำให้หน่อย"', "#00f0ff");
+        logInfo("SIMULATE", 'กดปุ่ม [P] จำลองพูด "ไปหยิบขวดน้ำให้หน่อย"', "#00f0ff");
         sendKeyInput("ไปหยิบขวดน้ำให้หน่อย");
     } else if (key === 'h') {
-        logInfo("⌨️ SIMULATE", 'กดปุ่ม [H] จำลองพูด "กลับฐาน"', "#38bdf8");
+        logInfo("SIMULATE", 'กดปุ่ม [H] จำลองพูด "กลับฐาน"', "#38bdf8");
         sendKeyInput("กลับฐาน");
     } else if (key === 'x') {
-        logInfo("⌨️ SIMULATE", 'กดปุ่ม [X] จำลองพูด "หยุดเดี๋ยวนี้"', "#ef4444");
+        logInfo("SIMULATE", 'กดปุ่ม [X] จำลองพูด "หยุดเดี๋ยวนี้"', "#ef4444");
         sendKeyInput("หยุดเดี๋ยวนี้");
     } else if (key === 'k') {
-        logInfo("⌨️ SIMULATE", 'กดปุ่ม [K] จำลองพูด "ยกเลิก" (Dismiss / Standby)', "#ef4444");
+        logInfo("SIMULATE", 'กดปุ่ม [K] จำลองพูด "ยกเลิก" (Dismiss / Standby)', "#ef4444");
         sendKeyInput("ยกเลิก");
     } else if (key === 'd') {
-        logInfo("📊 DASHBOARD", 'กดปุ่ม [D] เปิดหน้า Live Telemetry Dashboard', "#00f0ff");
+        logInfo("DASHBOARD", 'กดปุ่ม [D] เปิดหน้า Live Telemetry Dashboard', "#00f0ff");
         window.open('/dashboard.html', '_blank');
     }
 });
 
-function showActionBanner(text, icon = '⚡') {
+function showActionBanner(text, icon = '') {
     const banner = document.getElementById('actionBanner');
     if (!banner) return;
-    banner.innerHTML = `<span style="font-size: 1.2rem;">${icon}</span> <span>${text}</span>`;
+    const iconHtml = icon ? `<span style="font-size: 0.85rem; font-weight: 700; opacity: 0.85;">[${icon}]</span> ` : '';
+    banner.innerHTML = `${iconHtml}<span>${text}</span>`;
     banner.classList.add('show');
     if (window._bannerTimer) clearTimeout(window._bannerTimer);
     window._bannerTimer = setTimeout(() => {
@@ -264,7 +265,7 @@ function handleDashboardActionCommand(ev) {
     const action = ev.action || '';
     const target = ev.target || '';
 
-    logInfo("⚡ DASHBOARD ACTION", `รับคำสั่ง Action Dashboard: [${action}] ${target ? `(${target})` : ''} -> แสดงผลบนหน้าจอ UI และเริ่มโต้ตอบทันที`, "#00f0ff");
+    logInfo("DASHBOARD ACTION", `รับคำสั่ง Action Dashboard: [${action}] ${target ? `(${target})` : ''} -> แสดงผลบนหน้าจอ UI และเริ่มโต้ตอบทันที`, "#00f0ff");
 
     // ปลุกหน้าจอ OLED Face ให้ตื่นและแสดงแสงนีออนทันที
     isAwake = true;
@@ -279,19 +280,19 @@ function handleDashboardActionCommand(ev) {
 
     if (action === 'PICK' || action.startsWith('PICK')) {
         const item = target || 'ขวดน้ำ';
-        showActionBanner(`คำสั่งหยิบสิ่งของ: ${item}`, '📦');
+        showActionBanner(`คำสั่งหยิบสิ่งของ: ${item}`, 'PICK');
         const speech = `กำลังไปหยิบ${item}ให้ค่ะ`;
         speakAI(speech, () => {
             if (typeof startWakeTimer === 'function') {
                 startWakeTimer(false);
-                logInfo("⏳ READY FOR NEXT COMMAND", "ทำตามคำสั่ง Dashboard เรียบร้อยแล้ว พร้อมรับคำสั่งถัดไปภายใน 15 วินาที...", "#10b981");
+                logInfo("READY FOR NEXT COMMAND", "ทำตามคำสั่ง Dashboard เรียบร้อยแล้ว พร้อมรับคำสั่งถัดไปภายใน 15 วินาที...", "#10b981");
             }
         });
         return;
     }
 
     if (action === 'HOME') {
-        showActionBanner('กลับสู่ฐานชาร์จ (HOME)', '🏠');
+        showActionBanner('กลับสู่ฐานชาร์จ (HOME)', 'HOME');
         speakAI("กำลังกลับไปที่ฐานค่ะ", () => {
             if (typeof startWakeTimer === 'function') {
                 startWakeTimer(false);
@@ -301,7 +302,7 @@ function handleDashboardActionCommand(ev) {
     }
 
     if (action === 'STOP') {
-        showActionBanner('หยุดการทำงานฉุกเฉิน (STOP)', '🛑');
+        showActionBanner('หยุดการทำงานฉุกเฉิน (STOP)', 'STOP');
         stopAudioPlayback();
         speakAI("หยุดการทำงานเรียบร้อยแล้วค่ะ", () => {
             resetToStandby(true);
@@ -310,7 +311,7 @@ function handleDashboardActionCommand(ev) {
     }
 
     if (action === 'START_LINE_TRACK') {
-        showActionBanner('เริ่มต้นเดินตามเส้นทาง (Line Tracking)', '🚀');
+        showActionBanner('เริ่มต้นเดินตามเส้นทาง (Line Tracking)', 'TRACK');
         speakAI("ยืนยันคำสั่งค่ะ กำลังเริ่มเดินตามเส้นทางนะคะ", () => {
             if (typeof startWakeTimer === 'function') startWakeTimer(false);
         });
@@ -318,7 +319,7 @@ function handleDashboardActionCommand(ev) {
     }
 
     if (action === 'STOP_LINE_TRACK') {
-        showActionBanner('หยุดการเดินตามเส้นทาง', '⏹️');
+        showActionBanner('หยุดการเดินตามเส้นทาง', 'STOP');
         speakAI("รับทราบค่ะ หยุดการเดินตามเส้นทางแล้วค่ะ", () => {
             if (typeof startWakeTimer === 'function') startWakeTimer(false);
         });
@@ -327,7 +328,7 @@ function handleDashboardActionCommand(ev) {
 
     if (action === 'NAVIGATE_TO') {
         const dest = target || 'สถานีปลายทาง';
-        showActionBanner(`นำทางไปยัง: ${dest}`, '📍');
+        showActionBanner(`นำทางไปยัง: ${dest}`, 'NAV');
         speakAI(`ยืนยันคำสั่งค่ะ กำลังเดินทางไปยัง${dest}ค่ะ`, () => {
             if (typeof startWakeTimer === 'function') startWakeTimer(false);
         });
@@ -336,7 +337,7 @@ function handleDashboardActionCommand(ev) {
 
     if (action === 'PLACE' || action.startsWith('PLACE')) {
         const item = target || 'วัตถุ';
-        showActionBanner(`แขนกลวางวัตถุ: ${item}`, '🦾');
+        showActionBanner(`แขนกลวางวัตถุ: ${item}`, 'PLACE');
         speakAI(`กำลังใช้แขนกลวาง${item}ลงตำแหน่งค่ะ`, () => {
             if (typeof startWakeTimer === 'function') startWakeTimer(false);
         });
@@ -345,7 +346,7 @@ function handleDashboardActionCommand(ev) {
 
     if (action === 'MOVE_OBJECT') {
         const item = target || 'วัตถุ';
-        showActionBanner(`เคลื่อนย้ายวัตถุ: ${item}`, '🔄');
+        showActionBanner(`เคลื่อนย้ายวัตถุ: ${item}`, 'MOVE');
         speakAI(`ยืนยันคำสั่งค่ะ กำลังเคลื่อนย้าย${item}ค่ะ`, () => {
             if (typeof startWakeTimer === 'function') startWakeTimer(false);
         });
@@ -354,7 +355,7 @@ function handleDashboardActionCommand(ev) {
 
     if (action === 'SAFETY_ALERT') {
         const reason = target || 'เหตุขัดข้อง';
-        showActionBanner(`⚠️ แจ้งเตือนความปลอดภัย: ${reason}`, '🚨');
+        showActionBanner(`แจ้งเตือนความปลอดภัย: ${reason}`, 'ALERT');
         stopAudioPlayback();
         let alertSpeech = "แจ้งเตือนความปลอดภัย! ตรวจพบความผิดปกติ ระบบหยุดการทำงานแล้วค่ะ";
         if (target === 'obstacle') alertSpeech = "ตรวจพบสิ่งกีดขวางด้านหน้า! ระบบหยุดการทำงานฉุกเฉินเพื่อความปลอดภัยค่ะ";
@@ -367,7 +368,7 @@ function handleDashboardActionCommand(ev) {
     }
 
     if (action === 'CLARIFY') {
-        showActionBanner('สอบถามข้อมูลเพิ่มเติมจากผู้ใช้', '❓');
+        showActionBanner('สอบถามข้อมูลเพิ่มเติมจากผู้ใช้', 'CLARIFY');
         const clarifySpeech = target || "ต้องการข้อมูลเพิ่มเติมก่อนเริ่มปฏิบัติงานค่ะ";
         speakAI(clarifySpeech, () => {
             if (typeof startWakeTimer === 'function') startWakeTimer(false);
@@ -376,7 +377,7 @@ function handleDashboardActionCommand(ev) {
     }
 
     if (action === 'CheckStatus') {
-        showActionBanner('ตรวจสอบสถานะอุปกรณ์ ESP32: ออนไลน์พร้อมใช้งาน', '🔍');
+        showActionBanner('ตรวจสอบสถานะอุปกรณ์ ESP32: ออนไลน์พร้อมใช้งาน', 'STATUS');
         speakAI("อุปกรณ์ ESP32 พร้อมใช้งานค่ะ สถานะออนไลน์ปกติค่ะ", () => {
             if (typeof startWakeTimer === 'function') {
                 startWakeTimer(false);
@@ -389,14 +390,14 @@ function handleDashboardActionCommand(ev) {
         isQAMode = true;
         if (typeof clearWakeTimer === 'function') clearWakeTimer();
         updateWakeVisual(true, true);
-        showActionBanner('เข้าสู่โหมดตอบคำถามต่อเนื่อง (Q&A Mode)', '💬');
+        showActionBanner('เข้าสู่โหมดตอบคำถามต่อเนื่อง (Q&A Mode)', 'QA');
         speakAI("เข้าสู่โหมดตอบคำถามแล้วค่ะ ถามคำถามได้เลยค่ะ");
         return;
     }
 
     if (action === 'StopQA') {
         isQAMode = false;
-        showActionBanner('ออกจากโหมดถามตอบ (Stop QA)', '⏹️');
+        showActionBanner('ออกจากโหมดถามตอบ (Stop QA)', 'STOP');
         speakAI("รับทราบค่ะ หยุดตอบคำถามแล้วค่ะ", () => {
             resetToStandby(true);
         });
@@ -404,7 +405,7 @@ function handleDashboardActionCommand(ev) {
     }
 
     // คำสั่งอื่นๆ ที่อาจเพิ่มเติมในอนาคต
-    showActionBanner(`คำสั่ง: ${action}`, '⚡');
+    showActionBanner(`คำสั่ง: ${action}`, 'ACTION');
     speakAI(`รับทราบคำสั่ง ${action} ค่ะ`, () => {
         if (typeof startWakeTimer === 'function') {
             startWakeTimer(false);
@@ -422,7 +423,7 @@ function initRobotDashboardSync() {
                 const ev = JSON.parse(e.data);
                 // 1. รับเสียงจำลองจาก Voice Simulator บน Dashboard
                 if (ev.type === 'SIMULATED_VOICE' && ev.transcript && ev.fromDashboard) {
-                    logInfo("🎙️ DASHBOARD SIMULATION", `รับคำสั่งเสียงจำลองจากแดชบอร์ด: "${ev.transcript}"`, "#00f0ff");
+                    logInfo("DASHBOARD SIMULATION", `รับคำสั่งเสียงจำลองจากแดชบอร์ด: "${ev.transcript}"`, "#00f0ff");
                     handleVoicePipeline(ev.transcript);
                     return;
                 }
@@ -447,7 +448,7 @@ function handleRobotTaskResult(ev) {
     const target = ev.target || 'วัตถุ';
     const isSuccess = (status === 'success' || status === 'completed');
 
-    logInfo("🤖 HARDWARE FEEDBACK", `รับผลการทำงานจาก ESP32: Action=${action} | Status=${status} | Target=${target}`, isSuccess ? "#10b981" : "#ef4444");
+    logInfo("HARDWARE FEEDBACK", `รับผลการทำงานจาก ESP32: Action=${action} | Status=${status} | Target=${target}`, isSuccess ? "#10b981" : "#ef4444");
 
     // ปลุกหน้าจอ OLED Face ให้ตื่นและแสดงออร่า
     isAwake = true;
@@ -455,13 +456,13 @@ function handleRobotTaskResult(ev) {
 
     if (action === 'PICK' || action.startsWith('PICK')) {
         if (isSuccess) {
-            showActionBanner(`✅ แขนกลหยิบ${target}สำเร็จเรียบร้อยค่ะ`, '🤖');
+            showActionBanner(`แขนกลหยิบ${target}สำเร็จเรียบร้อยค่ะ`, 'SUCCESS');
             if (typeof setFaceExpression === 'function') setFaceExpression('happy');
             speakAI(`หยิบ${target}เรียบร้อยแล้วค่ะ`, () => {
                 if (typeof startWakeTimer === 'function') startWakeTimer(false);
             });
         } else {
-            showActionBanner(`❌ ไม่สามารถหยิบ${target}ได้ค่ะ`, '⚠️');
+            showActionBanner(`ไม่สามารถหยิบ${target}ได้ค่ะ`, 'FAILED');
             if (typeof setFaceExpression === 'function') setFaceExpression('confused');
             speakAI(`เกิดข้อผิดพลาด ไม่สามารถหยิบ${target}ได้ค่ะ`, () => {
                 if (typeof startWakeTimer === 'function') startWakeTimer(false);
@@ -472,13 +473,13 @@ function handleRobotTaskResult(ev) {
 
     if (action === 'PLACE') {
         if (isSuccess) {
-            showActionBanner(`✅ แขนกลวาง${target}ลงตำแหน่งเรียบร้อยค่ะ`, '🤖');
+            showActionBanner(`แขนกลวาง${target}ลงตำแหน่งเรียบร้อยค่ะ`, 'SUCCESS');
             if (typeof setFaceExpression === 'function') setFaceExpression('happy');
             speakAI(`วาง${target}ลงตำแหน่งเรียบร้อยแล้วค่ะ`, () => {
                 if (typeof startWakeTimer === 'function') startWakeTimer(false);
             });
         } else {
-            showActionBanner(`❌ ไม่สามารถวาง${target}ได้ค่ะ`, '⚠️');
+            showActionBanner(`ไม่สามารถวาง${target}ได้ค่ะ`, 'FAILED');
             if (typeof setFaceExpression === 'function') setFaceExpression('confused');
             speakAI(`เกิดข้อผิดพลาด ไม่สามารถวาง${target}ได้ค่ะ`, () => {
                 if (typeof startWakeTimer === 'function') startWakeTimer(false);
@@ -489,13 +490,13 @@ function handleRobotTaskResult(ev) {
 
     if (action === 'NAVIGATE_TO') {
         if (isSuccess) {
-            showActionBanner(`📍 หุ่นยนต์เดินทางถึง${target}เรียบร้อยแล้วค่ะ`, '🏁');
+            showActionBanner(`หุ่นยนต์เดินทางถึง${target}เรียบร้อยแล้วค่ะ`, 'SUCCESS');
             if (typeof setFaceExpression === 'function') setFaceExpression('happy');
             speakAI(`เดินทางถึง${target} เรียบร้อยแล้วค่ะ`, () => {
                 if (typeof startWakeTimer === 'function') startWakeTimer(false);
             });
         } else {
-            showActionBanner(`⚠️ เดินทางไปยัง${target}ไม่สำเร็จค่ะ`, '⚠️');
+            showActionBanner(`เดินทางไปยัง${target}ไม่สำเร็จค่ะ`, 'FAILED');
             if (typeof setFaceExpression === 'function') setFaceExpression('confused');
             speakAI(`เกิดข้อผิดพลาด ไม่สามารถเดินทางไปยังสถานีได้ค่ะ`, () => {
                 if (typeof startWakeTimer === 'function') startWakeTimer(false);
@@ -506,13 +507,13 @@ function handleRobotTaskResult(ev) {
 
     if (action === 'START_LINE_TRACK') {
         if (isSuccess) {
-            showActionBanner(`🏁 เดินตามเส้นทางเสร็จสิ้นเรียบร้อยค่ะ`, '🏁');
+            showActionBanner(`เดินตามเส้นทางเสร็จสิ้นเรียบร้อยค่ะ`, 'SUCCESS');
             if (typeof setFaceExpression === 'function') setFaceExpression('happy');
             speakAI(`เดินตามเส้นทางเสร็จสิ้นเรียบร้อยแล้วค่ะ`, () => {
                 if (typeof startWakeTimer === 'function') startWakeTimer(false);
             });
         } else {
-            showActionBanner(`⚠️ แจ้งเตือน หุ่นยนต์หลุดออกนอกเส้นทางค่ะ`, '🚨');
+            showActionBanner(`แจ้งเตือน หุ่นยนต์หลุดออกนอกเส้นทางค่ะ`, 'ALERT');
             if (typeof setFaceExpression === 'function') setFaceExpression('confused');
             speakAI(`แจ้งเตือน หุ่นยนต์หลุดออกนอกเส้นทางค่ะ`, () => {
                 if (typeof startWakeTimer === 'function') startWakeTimer(false);
@@ -523,13 +524,13 @@ function handleRobotTaskResult(ev) {
 
     if (action === 'MOVE_OBJECT') {
         if (isSuccess) {
-            showActionBanner(`📦 เคลื่อนย้าย${target}สำเร็จเรียบร้อยค่ะ`, '🤖');
+            showActionBanner(`เคลื่อนย้าย${target}สำเร็จเรียบร้อยค่ะ`, 'SUCCESS');
             if (typeof setFaceExpression === 'function') setFaceExpression('happy');
             speakAI(`เคลื่อนย้าย${target}เรียบร้อยแล้วค่ะ`, () => {
                 if (typeof startWakeTimer === 'function') startWakeTimer(false);
             });
         } else {
-            showActionBanner(`❌ เคลื่อนย้าย${target}ไม่สำเร็จค่ะ`, '⚠️');
+            showActionBanner(`เคลื่อนย้าย${target}ไม่สำเร็จค่ะ`, 'FAILED');
             if (typeof setFaceExpression === 'function') setFaceExpression('confused');
             speakAI(`เกิดข้อผิดพลาด ไม่สามารถเคลื่อนย้าย${target}ได้ค่ะ`, () => {
                 if (typeof startWakeTimer === 'function') startWakeTimer(false);
@@ -540,10 +541,10 @@ function handleRobotTaskResult(ev) {
 
     // กรณีอื่นๆ ทั่วไป
     if (isSuccess) {
-        showActionBanner(`✅ ปฏิบัติภารกิจ ${action} สำเร็จเรียบร้อยค่ะ`, '✨');
+        showActionBanner(`ปฏิบัติภารกิจ ${action} สำเร็จเรียบร้อยค่ะ`, 'SUCCESS');
         speakAI(`ปฏิบัติภารกิจ ${action} เรียบร้อยแล้วค่ะ`);
     } else {
-        showActionBanner(`❌ ภารกิจ ${action} เกิดข้อผิดพลาด`, '⚠️');
+        showActionBanner(`ภารกิจ ${action} เกิดข้อผิดพลาด`, 'FAILED');
         speakAI(`เกิดข้อผิดพลาดในการปฏิบัติงานค่ะ`);
     }
 }
@@ -553,5 +554,5 @@ window.addEventListener('DOMContentLoaded', () => {
     initZeroClickExperience();
     initSpeechRecognition();
     initRobotDashboardSync();
-    logInfo("🚀 SYSTEM INITIALIZED", "Nexxa AI Robot พร้อมใช้งานทันที 100% (Single Voice: เปรมวดี Neural)", "#10b981");
+    logInfo("SYSTEM INITIALIZED", "Nexxa AI Robot พร้อมใช้งานทันที 100% (Single Voice: เปรมวดี Neural)", "#10b981");
 });

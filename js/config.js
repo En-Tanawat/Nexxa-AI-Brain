@@ -62,19 +62,19 @@ function logInfo(badge, text, color = '#00f0ff') {
 window.setEsp32Url = function(url) {
     esp32Url = url;
     localStorage.setItem('rexza_esp32_url', url);
-    logInfo("⚙️ ESP32 CONFIG", `เปลี่ยน URL เป็น: ${url}`, "#10b981");
+    logInfo("ESP32 CONFIG", `เปลี่ยน URL เป็น: ${url}`, "#10b981");
 };
 
 window.setAiMode = function(mode) {
     if (['gemini', 'local'].includes(mode)) {
         aiMode = mode;
         localStorage.setItem('rexza_ai_mode', mode);
-        logInfo("⚙️ AI CONFIG", `เปลี่ยนโหมดสมองกลเป็น: ${mode}`, "#a855f7");
+        logInfo("AI CONFIG", `เปลี่ยนโหมดสมองกลเป็น: ${mode}`, "#a855f7");
     }
 };
 
 window.setGeminiKey = function(key) {
     geminiKey = key;
     localStorage.setItem('rexza_gemini_key', key);
-    logInfo("⚙️ GEMINI KEY", "บันทึก API Key สำเร็จ", "#10b981");
+    logInfo("GEMINI KEY", "บันทึก API Key สำเร็จ", "#10b981");
 };

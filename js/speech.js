@@ -12,13 +12,13 @@ function startWakeTimer(withChime = true) {
     isAwake = true;
     updateWakeVisual(true, isQAMode);
     if (withChime) playWakeChime('activate');
-    logInfo("⏳ NEXXA LISTENING", "Nexxa พร้อมรับฟัง! กำลังรอรับคำสั่งภายใน 15 วินาที...", "#10b981");
+    logInfo("NEXXA LISTENING", "Nexxa พร้อมรับฟัง! กำลังรอรับคำสั่งภายใน 15 วินาที...", "#10b981");
     wakeTimeoutTimer = setTimeout(() => {
         if (isAwake && !isQAMode) {
             isAwake = false;
             updateWakeVisual(false);
             playWakeChime('dismiss');
-            logInfo("💤 NEXXA TIMEOUT", "ไม่ได้ยินคำสั่งภายใน 15 วินาที -> กลับสู่สถานะ Standby ปกติ เท่านั้น", "#94a3b8");
+            logInfo("NEXXA TIMEOUT", "ไม่ได้ยินคำสั่งภายใน 15 วินาที -> กลับสู่สถานะ Standby ปกติ เท่านั้น", "#94a3b8");
         }
     }, WAKE_TIMEOUT_MS);
 }
@@ -36,7 +36,7 @@ function resetToStandby(silent = false) {
     isQAMode = false;
     updateWakeVisual(false);
     if (!silent) playWakeChime('dismiss');
-    logInfo("💤 STANDBY", "สิ้นสุดการทำงาน -> กลับสู่โหมดสแตนด์บายปกติ รอการปลุกเพื่อเริ่ม Action ถัดไป", "#94a3b8");
+    logInfo("STANDBY", "สิ้นสุดการทำงาน -> กลับสู่โหมดสแตนด์บายปกติ รอการปลุกเพื่อเริ่ม Action ถัดไป", "#94a3b8");
 }
 
 function normalizeSpeechPhonetics(text) {
@@ -88,7 +88,7 @@ function handleVoicePipeline(rawText) {
 
     // 0. โหมดตอบคำถามต่อเนื่อง (AnswerQuestion Mode)
     if (isQAMode) {
-        logInfo("💬 QA LISTENING", `ได้ยินในโหมดตอบคำถาม: "${trimmed}"`, "#a855f7");
+        logInfo("QA LISTENING", `ได้ยินในโหมดตอบคำถาม: "${trimmed}"`, "#a855f7");
 
         // ตรวจจับคำสั่งออกจากโหมดตอบคำถาม (ครอบคลุมทั้งคำว่า หยุด, พอแล้ว, ไม่ต้องตอบแล้ว, พอ, เลิกตอบ, cancel, exit, stop qa ฯลฯ)
         const stopQAKeywords = [
@@ -102,7 +102,7 @@ function handleVoicePipeline(rawText) {
         const isStopQA = stopQAKeywords.some(kw => lower.includes(kw));
 
         if (isStopQA) {
-            logInfo("🛑 STOP QA", `ผู้ใช้สั่งออกจากโหมดถามตอบ ("${trimmed}") -> กลับสู่โหมดรอรับคำสั่งปกติ`, "#10b981");
+            logInfo("STOP QA", `ผู้ใช้สั่งออกจากโหมดถามตอบ ("${trimmed}") -> กลับสู่โหมดรอรับคำสั่งปกติ`, "#10b981");
             isQAMode = false;
             speakAI("รับทราบค่ะ หยุดตอบคำถามแล้วค่ะ", () => {
                 resetToStandby();
@@ -137,7 +137,7 @@ function handleVoicePipeline(rawText) {
     }
 
     if (foundWake) {
-        logInfo("⚡ WAKE WORD", `ตรวจพบคำปลุก: "${foundWake}"`, "#10b981");
+        logInfo("WAKE WORD", `ตรวจพบคำปลุก: "${foundWake}"`, "#10b981");
 
         // ตัดคำปลุกออกเพื่อดูว่ามีคำสั่งพ่วงมาในประโยคเดียวกันหรือไม่ (Single-Sentence Command)
         let remaining = lower;
@@ -161,7 +161,7 @@ function handleVoicePipeline(rawText) {
             clearWakeTimer();
             startWakeTimer(false);
             const greeting = nexxaGreetings[Math.floor(Math.random() * nexxaGreetings.length)];
-            logInfo("👋 NEXXA PROMPT", `Nexxa ตอบรับ: "${greeting}" (เปิดเวลารอรับคำสั่ง 15 วินาที)`, "#10b981");
+            logInfo("NEXXA PROMPT", `Nexxa ตอบรับ: "${greeting}" (เปิดเวลารอรับคำสั่ง 15 วินาที)`, "#10b981");
             speakAI(greeting, () => {
                 startWakeTimer(false);
             });
@@ -174,7 +174,7 @@ function handleVoicePipeline(rawText) {
             updateWakeVisual(true);
             playWakeChime('activate');
             clearWakeTimer();
-            logInfo("🎯 DIRECT COMMAND", `คำสั่งตรง: "${cleanCommand}"`, "#00f0ff");
+            logInfo("DIRECT COMMAND", `คำสั่งตรง: "${cleanCommand}"`, "#00f0ff");
             processCommandWithAI(cleanCommand);
             return;
         }
@@ -182,7 +182,7 @@ function handleVoicePipeline(rawText) {
 
     // 2. ถ้าไม่มีคำปลุก ตรวจสอบสถานะการตื่น (STRICT WAKE GATING)
     if (!isAwake) {
-        logInfo("💤 SLEEPING / LOCKED", `ข้ามขั้นตอนไม่ได้! ต้องปลุกด้วย "nexxa" ก่อนเริ่ม Action ใดๆ (ได้ยิน: "${trimmed}")`, "#94a3b8");
+        logInfo("SLEEPING / LOCKED", `ข้ามขั้นตอนไม่ได้! ต้องปลุกด้วย "nexxa" ก่อนเริ่ม Action ใดๆ (ได้ยิน: "${trimmed}")`, "#94a3b8");
         return; // ห้ามทำงาน Action ใดๆ โดยเด็ดขาดจนกว่าจะถูกปลุก
     }
 
@@ -191,7 +191,7 @@ function handleVoicePipeline(rawText) {
 
     // คำสั่งยกเลิก (Cancel / Dismiss)
     if (lower.includes('ยกเลิก') || lower.includes('ไม่เป็นไร') || lower.includes('พอแล้ว') || lower.includes('ช่างมัน') || lower.includes('cancel')) {
-        logInfo("🛑 CANCEL", "ผู้ใช้สั่งยกเลิกคำสั่ง", "#ef4444");
+        logInfo("CANCEL", "ผู้ใช้สั่งยกเลิกคำสั่ง", "#ef4444");
         speakAI("ยกเลิกแล้วค่ะ", () => {
             resetToStandby();
         });
@@ -199,14 +199,14 @@ function handleVoicePipeline(rawText) {
     }
 
     // ประมวลผลคำสั่งขณะตื่น
-    logInfo("🎯 PROCESSING", `ประมวลผลคำสั่ง: "${trimmed}"`, "#00f0ff");
+    logInfo("PROCESSING", `ประมวลผลคำสั่ง: "${trimmed}"`, "#00f0ff");
     processCommandWithAI(trimmed);
 }
 
 function initSpeechRecognition() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-        logInfo("⚠️ SPEECH WARN", "เบราว์เซอร์นี้ไม่รองรับ Web Speech API", "#ef4444");
+        logInfo("SPEECH WARN", "เบราว์เซอร์นี้ไม่รองรับ Web Speech API", "#ef4444");
         return;
     }
 
@@ -218,7 +218,7 @@ function initSpeechRecognition() {
 
     recognition.onstart = () => {
         isRecognizing = true;
-        logInfo("🎙️ LISTENING", "Continuous Speech Recognition: พร้อมฟังคำปลุกตลอดเวลา", "#10b981");
+        logInfo("LISTENING", "Continuous Speech Recognition: พร้อมฟังคำปลุกตลอดเวลา", "#10b981");
     };
 
     recognition.onresult = (event) => {
@@ -226,12 +226,12 @@ function initSpeechRecognition() {
             const result = event.results[i];
             if (result && (result.isFinal || result.isFinal === undefined)) {
                 const transcript = result[0].transcript;
-                logInfo("👂 HEARD", `"${transcript}"`, "#38bdf8");
+                logInfo("HEARD", `"${transcript}"`, "#38bdf8");
                 if (typeof sendTelemetry === 'function') {
                     sendTelemetry({
                         type: 'USER_INPUT',
                         direction: 'INCOMING',
-                        badge: '🗣️ USER INPUT (เสียงพูด)',
+                        badge: 'USER INPUT (เสียงพูด)',
                         message: transcript.trim(),
                         transcript: transcript.trim()
                     });
@@ -243,11 +243,11 @@ function initSpeechRecognition() {
 
     recognition.onerror = (event) => {
         if (event.error !== 'no-speech') {
-            logInfo("⚠️ MIC ERROR", event.error, "#f59e0b");
+            logInfo("MIC ERROR", event.error, "#f59e0b");
             if (event.error === 'not-allowed') {
                 const tapPrompt = document.getElementById('tapPrompt');
                 if (tapPrompt) {
-                    tapPrompt.innerText = '⚠️ กรุณากดอนุญาตการใช้ไมโครโฟนบนเบราว์เซอร์';
+                    tapPrompt.innerText = 'กรุณากดอนุญาตการใช้ไมโครโฟนบนเบราว์เซอร์';
                     tapPrompt.style.opacity = '1';
                     tapPrompt.style.color = '#ef4444';
                 }
