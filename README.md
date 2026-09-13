@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-100%25%20Passing-brightgreen.svg)](tests/)
 [![Voice](https://img.shields.io/badge/TTS-Edge%20Neural%20(Premwadee)-blueviolet.svg)](#voice-synthesis)
-[![AI Engine](https://img.shields.io/badge/AI-Gemini%203.5%20Flash%20Lite-orange.svg)](https://ai.google.dev/)
+
 
 > **Nexxa AI Brain** คือระบบสมองกลปัญญาประดิษฐ์สั่งการด้วยเสียงภาษาไทยแบบเรียลไทม์ พร้อมหน้าจอแสดงผลใบหน้าหุ่นยนต์ OLED Cyber-Blue ออกแบบมาเพื่อทำหน้าที่เป็น **"ศูนย์กลางการประมวลผล (AI Central Brain)"** สื่อสารสองทิศทาง (Bidirectional REST & SSE) ควบคุมหุ่นยนต์ฮาร์ดแวร์กายภาพผ่านไมโครคอนโทรลเลอร์ **ESP32**
 
