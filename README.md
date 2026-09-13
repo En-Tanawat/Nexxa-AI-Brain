@@ -58,8 +58,6 @@ Nexxa-AI-Brain/
 ├── package.json                 # Node.js Dependencies & NPM Scripts
 ├── esp32_example.ino            # ซอร์สโค้ด Arduino C++ สำหรับ Flash ลงบอร์ด ESP32
 ├── src/main.cpp                 # ซอร์สโค้ด PlatformIO C++ พร้อม CORS
-├── run_web.bat                  # สคริปต์คลิกเดียวรันเซิร์ฟเวอร์และเปิดเบราว์เซอร์อัตโนมัติ
-├── stop_server.bat              # สคริปต์หยุดการทำงานของเซิร์ฟเวอร์
 ├── css/
 │   └── style.css                # ดีไซน์สไตล์ Cyber-Blue OLED UI
 ├── js/
@@ -71,14 +69,7 @@ Nexxa-AI-Brain/
 │   ├── gemini.js                # Google AI Studio Gemini 3.5 Flash Integration
 │   ├── esp32.js                 # HTTP Client สื่อสารกับ ESP32 Gateway
 │   └── app.js                   # Main Controller เชื่อมประสานทุกโมดูลเข้าด้วยกัน
-├── tests/                       # ชุดแบบทดสอบอัตโนมัติ (Automated Test Suites)
-│   ├── run_all.js               # ตัวรันแบบทดสอบทั้งหมดแบบรวมศูนย์ (Master Test Runner)
-│   ├── test_system.js           # ชุดทดสอบระบบโมดูลาร์ (50 Tests)
-│   ├── test_nexxa_mission_scope.js # ชุดทดสอบวัตถุประสงค์และขอบเขตภารกิจ (18 Tests)
-│   ├── test_speech_production.js # ชุดทดสอบความทนทานต่อสำเนียงและเสียงรบกวน (14 Groups)
-│   └── test_dashboard_action_sync.js # ชุดทดสอบการซิงค์ข้อมูลแดชบอร์ดและฮาร์ดแวร์
 ├── Nexxa_AI_Brain_ESP32_Integration_Manual.docx # คู่มือเชื่อมต่อระบบฉบับสมบูรณ์ (MS Word)
-└── Nexxa_AI_Brain_ESP32_Integration_Manual.md   # คู่มือเชื่อมต่อระบบฉบับ Markdown
 ```
 
 ---
