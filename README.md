@@ -97,30 +97,6 @@ npm install
 # วิธีที่ 1: รันด้วยคำสั่ง Node
 node server.js
 
-# วิธีที่ 2: ดับเบิลคลิกไฟล์ Batch
-run_web.bat
-```
-- เข้าใช้งานหน้าจอหุ่นยนต์ OLED: `http://localhost:8000`
-- เข้าใช้งานหน้าจอแดชบอร์ด: `http://localhost:8000/dashboard.html`
-
----
-
-## การรันแบบทดสอบ (Running Tests)
-
-ระบบมาพร้อมกับชุดทดสอบแบบครอบคลุม สามารถรันผ่านคำสั่ง:
-
-```bash
-# รันชุดแบบทดสอบทั้งหมด
-node tests/run_all.js
-
-# หรือรันเฉพาะชุดทดสอบระบบหลัก
-node tests/test_system.js
-
-# หรือรันชุดทดสอบความถูกต้องของขอบเขตภารกิจ
-node tests/test_nexxa_mission_scope.js
-```
-
----
 
 ## สเปกการส่ง-รับข้อมูลกับ ESP32 (API Specification)
 
