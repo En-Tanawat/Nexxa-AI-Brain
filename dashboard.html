@@ -1,0 +1,2271 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexxa AI Robot - Telemetry & Command Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-canvas: #f4f6fa;
+            --bg-card: #ffffff;
+            --bg-subtle: #f8fafc;
+            --bg-hover: #f1f5f9;
+            
+            --border-light: #e8ecf4;
+            --border-focus: #3b82f6;
+            
+            --text-main: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --text-dim: #cbd5e1;
+            
+            /* Dribbble Theme Palette */
+            --primary-blue: #1e60f0;
+            --primary-blue-hover: #154ec5;
+            --primary-blue-light: #edf3ff;
+            --accent-green: #10b981;
+            --accent-green-light: #ecfdf5;
+            --accent-amber: #f59e0b;
+            --accent-amber-light: #fffbeb;
+            --accent-purple: #8b5cf6;
+            --accent-purple-light: #f5f3ff;
+            --accent-red: #ef4444;
+            --accent-red-light: #fef2f2;
+            
+            --card-radius: 24px;
+            --inner-radius: 16px;
+            --pill-radius: 9999px;
+            
+            --shadow-card: 0 10px 30px -4px rgba(15, 23, 42, 0.04), 0 4px 12px -2px rgba(15, 23, 42, 0.02);
+            --shadow-hover: 0 16px 36px -4px rgba(15, 23, 42, 0.08), 0 6px 16px -2px rgba(15, 23, 42, 0.04);
+            --shadow-blue-btn: 0 8px 20px -2px rgba(30, 96, 240, 0.35);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(225, 234, 254, 0.6) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(236, 253, 245, 0.6) 0%, transparent 40%);
+            color: var(--text-main);
+            font-family: 'Inter', 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 16px 24px 32px 24px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top Navigation Header (Faithful Dribbble bar) */
+        header.top-navbar {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-light);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 16px;
+            z-index: 40;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .app-logo {
+            width: 40px;
+            height: 40px;
+            background: #0f172a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.15rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+        }
+        .app-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link {
+            padding: 8px 18px;
+            border-radius: var(--pill-radius);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--text-main);
+            background: var(--bg-hover);
+        }
+
+        .nav-link.active {
+            background: var(--primary-blue);
+            color: #ffffff;
+            box-shadow: var(--shadow-blue-btn);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .stream-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 14px;
+            border-radius: var(--pill-radius);
+            font-size: 0.78rem;
+            font-weight: 700;
+            background: var(--accent-green-light);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .stream-status-pill.reconnecting {
+            background: var(--accent-amber-light);
+            color: var(--accent-amber);
+            border-color: rgba(245, 158, 11, 0.25);
+        }
+
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: currentColor;
+            animation: pulse 1.6s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.35; transform: scale(0.8); }
+        }
+
+        .icon-circle-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--border-light);
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.18s;
+            position: relative;
+        }
+
+        .icon-circle-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-main);
+            border-color: #cbd5e1;
+        }
+
+        .icon-circle-btn .badge-dot {
+            position: absolute;
+            top: 7px;
+            right: 8px;
+            width: 7px;
+            height: 7px;
+            background: var(--accent-red);
+            border-radius: 50%;
+            border: 1.5px solid #ffffff;
+        }
+
+        .btn-robot-screen {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 15px;
+            border-radius: var(--pill-radius);
+            background: var(--primary-blue-light);
+            color: var(--primary-blue);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.18s;
+            border: 1px solid rgba(30, 96, 240, 0.2);
+        }
+
+        .btn-robot-screen:hover {
+            background: var(--primary-blue);
+            color: #ffffff;
+            box-shadow: var(--shadow-blue-btn);
+        }
+
+        .user-profile-widget {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 6px;
+            cursor: pointer;
+            border-radius: var(--pill-radius);
+            transition: background 0.15s;
+        }
+
+        .user-profile-widget:hover {
+            background: var(--bg-hover);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            line-height: 1.2;
+        }
+
+        .user-name {
+            font-size: 0.84rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .user-role {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* Main Dashboard Grid Layout */
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Top Grid Section (Timeline + Task Status) */
+        .top-row-grid {
+            display: grid;
+            grid-template-columns: 1.8fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1080px) {
+            .top-row-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Common Card Style */
+        .dash-card {
+            background: var(--bg-card);
+            border-radius: var(--card-radius);
+            padding: 24px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-card);
+            transition: box-shadow 0.2s, transform 0.2s;
+            position: relative;
+        }
+
+        .dash-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-header-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-subtitle {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .btn-options-menu {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            padding: 4px 6px;
+            transition: all 0.15s;
+        }
+
+        .btn-options-menu:hover {
+            background: var(--bg-hover);
+            color: var(--text-main);
+        }
+
+        /* Top Left: Projects Timeline & Activity Center */
+        .timeline-card-inner {
+            display: grid;
+            grid-template-columns: 210px 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-card-inner {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .quick-metric-box {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: var(--inner-radius);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .quick-metric-box .arrow-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .quick-metric-num {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        .quick-metric-label {
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* Solid Blue Action Pill Card (Like "Progress" blue card in Dribbble) */
+        .blue-progress-card {
+            background: linear-gradient(145deg, #1e60f0, #1347b8);
+            border-radius: var(--inner-radius);
+            padding: 16px;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 10px 24px -4px rgba(30, 96, 240, 0.4);
+            position: relative;
+        }
+
+        .blue-progress-card .card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .blue-progress-card .card-head h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .blue-progress-card .action-pills-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .action-white-pill {
+            background: #ffffff;
+            color: var(--primary-blue);
+            font-size: 0.76rem;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: var(--pill-radius);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            text-align: left;
+        }
+
+        .action-white-pill:hover {
+            transform: translateX(3px);
+            background: #f8fafc;
+        }
+
+        .action-white-pill.btn-red {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .action-white-pill.btn-purple {
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+
+        /* Horizontal Timeline Track Area */
+        .timeline-track-area {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: var(--inner-radius);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .timeline-days-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+            min-width: 380px;
+        }
+
+        .day-tick {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-align: center;
+            width: 28px;
+        }
+
+        .day-tick.active-day {
+            background: var(--primary-blue);
+            color: #ffffff;
+            border-radius: 50%;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(30, 96, 240, 0.35);
+        }
+
+        /* Floating Milestone Capsules (Like Dribbble pills on the timeline grid) */
+        .milestones-cloud {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 380px;
+        }
+
+        .milestone-pill-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .timeline-milestone-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px 6px 6px;
+            border-radius: var(--pill-radius);
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .timeline-milestone-pill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.09);
+        }
+
+        .timeline-milestone-pill.pill-blue {
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .timeline-milestone-pill.pill-green {
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .timeline-milestone-pill.pill-amber {
+            border-left: 4px solid var(--accent-amber);
+        }
+
+        .timeline-milestone-pill.pill-purple {
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .milestone-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #334155;
+            font-weight: 700;
+        }
+
+        .milestone-badge-check {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            margin-left: auto;
+        }
+
+        /* Top Right: Task Status / 3D Cylinder Progress Bars (Signature Dribbble Feature!) */
+        .big-percent-header {
+            margin-bottom: 20px;
+        }
+
+        .big-percent-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--text-main);
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .cylinder-bars-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .cylinder-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .cylinder-labels {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .cylinder-track {
+            height: 38px;
+            border-radius: var(--pill-radius);
+            background: repeating-linear-gradient(
+                -45deg,
+                #f1f5f9,
+                #f1f5f9 6px,
+                #f8fafc 6px,
+                #f8fafc 12px
+            );
+            border: 1px solid #e2e8f0;
+            padding: 3px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 3D Cylinder Pill Bar with realistic cap */
+        .cylinder-bar-fill {
+            height: 100%;
+            border-radius: var(--pill-radius);
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+            font-size: 0.74rem;
+            font-weight: 800;
+            color: #ffffff;
+            transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.4), inset 0 -3px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .cylinder-bar-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 32px;
+            border-radius: 50%;
+            background: inherit;
+            filter: brightness(1.18);
+            box-shadow: -2px 0 6px rgba(0, 0, 0, 0.12);
+        }
+
+        .cylinder-bar-fill.bar-blue {
+            background: linear-gradient(90deg, #1e60f0, #3b82f6);
+        }
+
+        .cylinder-bar-fill.bar-green {
+            background: linear-gradient(90deg, #059669, #10b981);
+        }
+
+        .cylinder-bar-fill.bar-amber {
+            background: linear-gradient(90deg, #d97706, #f59e0b);
+        }
+
+        /* Bottom Grid: 3 Columns (Gauge + Activity List + Insights/Time) */
+        .bottom-row-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1080px) {
+            .bottom-row-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Bottom Left: Semi-circular Gauge Chart */
+        .gauge-center-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            position: relative;
+        }
+
+        .gauge-svg-wrap {
+            width: 220px;
+            height: 120px;
+            position: relative;
+        }
+
+        .gauge-text-center {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .gauge-val-big {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--text-main);
+            line-height: 1;
+        }
+
+        .gauge-val-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .gauge-metrics-row {
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid var(--border-light);
+            padding-top: 16px;
+            margin-top: 16px;
+        }
+
+        .gauge-stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .gauge-stat-num {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .gauge-stat-dot-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .stat-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        /* Bottom Middle: Activity List (Clean modern feed matching Dribbble) */
+        .activity-feed-card {
+            display: flex;
+            flex-direction: column;
+            height: 380px;
+        }
+
+        .filter-tabs-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .pill-filter-btn {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            padding: 5px 12px;
+            border-radius: var(--pill-radius);
+            font-size: 0.74rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s;
+        }
+
+        .pill-filter-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-main);
+        }
+
+        .pill-filter-btn.active {
+            background: var(--primary-blue);
+            color: #ffffff;
+            border-color: var(--primary-blue);
+            box-shadow: 0 4px 10px rgba(30, 96, 240, 0.25);
+        }
+
+        .stream-feed-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-right: 4px;
+        }
+
+        .activity-item {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: all 0.15s;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .activity-item:hover {
+            background: #ffffff;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+            border-color: #cbd5e1;
+        }
+
+        .activity-icon-wrap {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+
+        .activity-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .activity-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .activity-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .activity-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .activity-desc {
+            font-size: 0.76rem;
+            color: var(--text-secondary);
+            line-height: 1.35;
+            word-break: break-word;
+        }
+
+        .activity-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: var(--pill-radius);
+            text-transform: uppercase;
+        }
+
+        .badge-in {
+            background: var(--primary-blue-light);
+            color: var(--primary-blue);
+        }
+
+        .badge-out {
+            background: var(--accent-green-light);
+            color: var(--accent-green);
+        }
+
+        .badge-brain {
+            background: var(--accent-purple-light);
+            color: var(--accent-purple);
+        }
+
+        .badge-audio {
+            background: var(--accent-amber-light);
+            color: var(--accent-amber);
+        }
+
+        .details-toggle-btn {
+            font-size: 0.68rem;
+            color: var(--primary-blue);
+            cursor: pointer;
+            margin-top: 4px;
+            user-select: none;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .json-details-pre {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 8px;
+            margin-top: 6px;
+            font-size: 0.68rem;
+            color: #475569;
+            white-space: pre-wrap;
+            max-height: 140px;
+            overflow-y: auto;
+            display: none;
+            font-family: 'JetBrains Mono', Consolas, monospace;
+        }
+
+        .json-details-pre.open {
+            display: block;
+        }
+
+        /* Bottom Right: Insights Histogram & Time Tracker */
+        .insights-card-inner {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            height: 100%;
+        }
+
+        .histogram-bars-wrap {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 70px;
+            padding: 8px 4px 0 4px;
+            gap: 3px;
+        }
+
+        .hist-bar {
+            flex: 1;
+            background: #cbd5e1;
+            border-radius: 4px 4px 0 0;
+            transition: height 0.3s, background 0.3s;
+        }
+
+        .hist-bar.active {
+            background: var(--primary-blue);
+        }
+
+        .time-tracker-box {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: var(--inner-radius);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .clock-big {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .clock-sub {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .btn-play-pause-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-blue-btn);
+            transition: transform 0.15s;
+        }
+
+        .btn-play-pause-circle:hover {
+            transform: scale(1.06);
+        }
+
+        /* Floating Command Modal (Clean dialog when clicking + Add New Task) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 580px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            animation: modalPop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .btn-close-modal {
+            background: var(--bg-hover);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-body {
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-section-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .chips-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .target-chip {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            padding: 5px 12px;
+            border-radius: var(--pill-radius);
+            font-size: 0.76rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .target-chip:hover, .target-chip.active {
+            background: var(--primary-blue-light);
+            color: var(--primary-blue);
+            border-color: var(--primary-blue);
+        }
+
+        .input-inline-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .text-input-field {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            background: var(--bg-subtle);
+            color: var(--text-main);
+            font-size: 0.84rem;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .text-input-field:focus {
+            border-color: var(--primary-blue);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(30, 96, 240, 0.15);
+        }
+
+        .btn-submit-action {
+            background: var(--primary-blue);
+            color: #ffffff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s;
+            box-shadow: var(--shadow-blue-btn);
+        }
+
+        .btn-submit-action:hover {
+            background: var(--primary-blue-hover);
+        }
+
+        .actions-2col-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .btn-modal-action {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-modal-action:hover {
+            background: #ffffff;
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-modal-action.danger {
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #dc2626;
+        }
+
+        .btn-modal-action.danger:hover {
+            background: var(--accent-red-light);
+            border-color: #dc2626;
+        }
+
+        /* Toast notification */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 12px 20px;
+            border-radius: var(--pill-radius);
+            font-size: 0.84rem;
+            font-weight: 600;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 150;
+            animation: toastPop 0.25s ease-out;
+        }
+
+        @keyframes toastPop {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Workspace Container -->
+    <main class="dashboard-container" style="margin-top: 6px;">
+
+        <!-- Top Section: Projects Timeline & Task Status -->
+        <section class="top-row-grid">
+            
+            <!-- Left Wide Card: Projects Timeline & Commands (Dribbble Layout) -->
+            <div class="dash-card">
+                <div class="card-header-flex">
+                    <div>
+                        <h2 class="card-title">Projects Timeline (NEXXA TELEMETRY & CONTROL)</h2>
+                        <p class="card-subtitle">ศูนย์กลางควบคุมการทำงานและบันทึกไทม์ไลน์ของหุ่นยนต์</p>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <div id="streamStatusBadge" class="stream-status-pill">
+                            <div class="pulse-dot"></div>
+                            <span id="streamStatusText">SSE LIVE</span>
+                        </div>
+
+                        <a href="/" target="_blank" class="btn-robot-screen" title="เปิดหน้าจอหุ่นยนต์ OLED Face" style="padding: 7px 14px; font-size: 0.82rem; text-decoration: none;">
+                            🤖 Robot Screen
+                        </a>
+
+                        <button class="btn-submit-action" onclick="openVoiceModal()" style="padding: 7px 14px; border-radius: 9999px; background: var(--accent-purple); font-size: 0.82rem;">
+                            🎙️ Voice Sim
+                        </button>
+
+                        <button class="btn-submit-action" onclick="openCommandModal()" style="padding: 7px 16px; border-radius: 9999px; font-size: 0.82rem;">
+                            ⚡ Action Command
+                        </button>
+                    </div>
+                </div>
+
+                <div class="timeline-card-inner">
+                    <!-- Left Column inside Card -->
+                    <div style="display: flex; flex-direction: column;">
+                        <!-- Mini Stat 1 -->
+                        <div class="quick-metric-box">
+                            <div class="arrow-badge">↗</div>
+                            <div class="quick-metric-num" id="statePill">STANDBY</div>
+                            <div class="quick-metric-label" id="kpiLastAction">คำสั่งล่าสุด: -</div>
+                        </div>
+
+                        <!-- Solid Blue Action Card (Like Dribbble Progress box) -->
+                        <div class="blue-progress-card">
+                            <div class="card-head">
+                                <h4>Quick Actions</h4>
+                                <span style="font-size: 0.75rem; opacity: 0.85;">⚡</span>
+                            </div>
+                            <div class="action-pills-list">
+                                <button class="action-white-pill" onclick="sendActionCommand('PICK')">
+                                    <span>📦 PICK (หยิบขวดน้ำ)</span>
+                                    <span>›</span>
+                                </button>
+                                <button class="action-white-pill" onclick="sendActionCommand('HOME')">
+                                    <span>🏠 HOME (กลับฐาน)</span>
+                                    <span>›</span>
+                                </button>
+                                <button class="action-white-pill btn-red" onclick="sendActionCommand('STOP')">
+                                    <span>🛑 STOP (หยุดฉุกเฉิน)</span>
+                                    <span>›</span>
+                                </button>
+                                <button class="action-white-pill" onclick="sendActionCommand('CheckStatus')">
+                                    <span>🔍 CheckStatus</span>
+                                    <span>›</span>
+                                </button>
+                                <button class="action-white-pill btn-purple" onclick="sendActionCommand('AnswerQuestion')">
+                                    <span>💬 Q&A Mode</span>
+                                    <span>›</span>
+                                </button>
+                                <button class="action-white-pill" onclick="sendActionCommand('StopQA')">
+                                    <span>⏹️ StopQA (หยุดตอบ)</span>
+                                    <span>›</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Horizontal Timeline Track -->
+                    <div class="timeline-track-area">
+                        <!-- Days / Hours Axis -->
+                        <div class="timeline-days-bar">
+                            <span class="day-tick">10m</span>
+                            <span class="day-tick">8m</span>
+                            <span class="day-tick">6m</span>
+                            <span class="day-tick">4m</span>
+                            <span class="day-tick active-day">Now</span>
+                            <span class="day-tick">2s</span>
+                            <span class="day-tick">4s</span>
+                            <span class="day-tick">6s</span>
+                            <span class="day-tick">7s</span>
+                            <span class="day-tick">8s</span>
+                        </div>
+
+                        <!-- Interactive Floating Milestones (Like Dribbble visual cards) -->
+                        <div class="milestones-cloud" id="milestonesCloud">
+                            <div class="milestone-pill-row" style="margin-left: 10%;">
+                                <div class="timeline-milestone-pill pill-blue" onclick="openCommandModal()">
+                                    <div class="milestone-avatar">📦</div>
+                                    <div>
+                                        <div style="font-size: 0.76rem; font-weight: 700;">PICK Command</div>
+                                        <div style="font-size: 0.65rem; color: var(--text-muted);">Action: bottle</div>
+                                    </div>
+                                    <div class="milestone-badge-check">✓</div>
+                                </div>
+                            </div>
+
+                            <div class="milestone-pill-row" style="margin-left: 28%;">
+                                <div class="timeline-milestone-pill pill-green" onclick="sendActionCommand('CheckStatus')">
+                                    <div class="milestone-avatar">📡</div>
+                                    <div>
+                                        <div style="font-size: 0.76rem; font-weight: 700;">ESP32 Gateway</div>
+                                        <div style="font-size: 0.65rem; color: var(--text-muted);" id="timelineEspStatus">Ready 100%</div>
+                                    </div>
+                                    <div class="milestone-badge-check">✓</div>
+                                </div>
+                            </div>
+
+                            <div class="milestone-pill-row" style="margin-left: 45%;">
+                                <div class="timeline-milestone-pill pill-purple" onclick="openVoiceModal()">
+                                    <div class="milestone-avatar">🧠</div>
+                                    <div>
+                                        <div style="font-size: 0.76rem; font-weight: 700;">Gemini 3.5 Flash</div>
+                                        <div style="font-size: 0.65rem; color: var(--text-muted);">Strict Wake: 15s Window</div>
+                                    </div>
+                                    <div style="font-size: 0.65rem; font-weight: 700; color: var(--accent-purple); margin-left: auto;">AI</div>
+                                </div>
+                            </div>
+
+                            <div class="milestone-pill-row" style="margin-left: 20%;">
+                                <div class="timeline-milestone-pill pill-amber" onclick="testSpeakPC()">
+                                    <div class="milestone-avatar">🔊</div>
+                                    <div>
+                                        <div style="font-size: 0.76rem; font-weight: 700;">Single Voice</div>
+                                        <div style="font-size: 0.65rem; color: var(--text-muted);">เปรมวดี Neural (Edge TTS)</div>
+                                    </div>
+                                    <div class="milestone-badge-check">✓</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Card: Task Status with 3D Cylinder Progress Bars (Signature Feature) -->
+            <div class="dash-card">
+                <div class="card-header-flex">
+                    <div>
+                        <h2 class="card-title">Task Status</h2>
+                        <p class="card-subtitle">ความพร้อมของระบบและการสั่งการฮาร์ดแวร์</p>
+                    </div>
+                    <button class="btn-options-menu" onclick="checkESP32Ping()">⋮</button>
+                </div>
+
+                <div class="big-percent-header">
+                    <div class="big-percent-title" id="kpiReadyPercent">98%</div>
+                    <div style="font-size: 0.76rem; color: var(--text-muted); font-weight: 600; margin-top: 4px;">System Health & Readiness</div>
+                </div>
+
+                <!-- 3D Cylindrical Progress Bars Stack -->
+                <div class="cylinder-bars-stack">
+                    <!-- 1. ESP32 REST Gateway (Blue Cylinder) -->
+                    <div class="cylinder-item">
+                        <div class="cylinder-labels">
+                            <span>ESP32 Hardware Gateway</span>
+                            <span id="labelGatewayLatency">~2ms (Online)</span>
+                        </div>
+                        <div class="cylinder-track">
+                            <div class="cylinder-bar-fill bar-blue" style="width: 100%;" id="barGateway">
+                                100%
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. AI Brain Engine (Green Cylinder) -->
+                    <div class="cylinder-item">
+                        <div class="cylinder-labels">
+                            <span>Gemini AI Studio (Wake Gated)</span>
+                            <span>95%</span>
+                        </div>
+                        <div class="cylinder-track">
+                            <div class="cylinder-bar-fill bar-green" style="width: 95%;">
+                                95%
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Single Neural Voice (Amber Cylinder) -->
+                    <div class="cylinder-item">
+                        <div class="cylinder-labels">
+                            <span>Edge Neural TTS (เปรมวดี)</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="cylinder-track">
+                            <div class="cylinder-bar-fill bar-amber" style="width: 90%;">
+                                90%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Bottom Section: 3 Columns (Gauge + Activity List + Insights/Time Tracker) -->
+        <section class="bottom-row-grid">
+            
+            <!-- Bottom Left: Project Progress / Action Success Gauge Chart -->
+            <div class="dash-card">
+                <div class="card-header-flex">
+                    <div>
+                        <h2 class="card-title">Project Progress</h2>
+                        <p class="card-subtitle">อัตราความสำเร็จของคำสั่งหุ่นยนต์</p>
+                    </div>
+                    <button class="btn-options-menu" onclick="showToast('รีเฟรชสถิติสำเร็จ')">⋮</button>
+                </div>
+
+                <div class="gauge-center-box">
+                    <div class="gauge-svg-wrap">
+                        <svg viewBox="0 0 240 130" width="220" height="120">
+                            <defs>
+                                <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#1e60f0"/>
+                                    <stop offset="60%" stop-color="#10b981"/>
+                                    <stop offset="100%" stop-color="#34d399"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- Background Arc -->
+                            <path d="M 25,120 A 95,95 0 0,1 215,120" fill="none" stroke="#edf2f7" stroke-width="22" stroke-linecap="round"/>
+                            <!-- Value Arc (76%) -->
+                            <path d="M 25,120 A 95,95 0 0,1 190,70" fill="none" stroke="url(#gaugeGradient)" stroke-width="22" stroke-linecap="round" id="gaugePath"/>
+                        </svg>
+                        <div class="gauge-text-center">
+                            <div class="gauge-val-big" id="gaugePercentText">76%</div>
+                            <div class="gauge-val-label">Project Completed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gauge-metrics-row">
+                    <div class="gauge-stat-item">
+                        <span class="gauge-stat-num" id="statDoneCount">26</span>
+                        <div class="gauge-stat-dot-label">
+                            <span class="stat-dot" style="background: var(--primary-blue);"></span> Done
+                        </div>
+                    </div>
+                    <div class="gauge-stat-item">
+                        <span class="gauge-stat-num" id="statProgressCount">56</span>
+                        <div class="gauge-stat-dot-label">
+                            <span class="stat-dot" style="background: var(--accent-green);"></span> Progress
+                        </div>
+                    </div>
+                    <div class="gauge-stat-item">
+                        <span class="gauge-stat-num" id="statQueueCount">0</span>
+                        <div class="gauge-stat-dot-label">
+                            <span class="stat-dot" style="background: var(--accent-amber);"></span> Queue
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Center: Today's Activity List (Real-time Telemetry Feed) -->
+            <div class="dash-card activity-feed-card" id="activityFeed">
+                <div class="card-header-flex">
+                    <div>
+                        <h2 class="card-title">Today's Activity List</h2>
+                        <p class="card-subtitle">สตรีมข้อมูลรับ-ส่ง (Telemetry Events Stream)</p>
+                    </div>
+                    <div style="display: flex; gap: 4px;">
+                        <button class="pill-filter-btn" id="btnPauseScroll" onclick="toggleAutoScroll()">⏸️ Auto</button>
+                        <button class="pill-filter-btn" onclick="clearEventStream()">🗑️ Clear</button>
+                        <button class="pill-filter-btn" onclick="exportEventsJson()">📥 Export</button>
+                    </div>
+                </div>
+
+                <!-- Filter Tabs (Strictly Input & ESP32) -->
+                <div class="filter-tabs-row">
+                    <button class="pill-filter-btn active" data-filter="ALL" onclick="setFilter('ALL', this)">ทั้งหมด (Input + ESP32)</button>
+                    <button class="pill-filter-btn" data-filter="INCOMING" onclick="setFilter('INCOMING', this)">⬇️ Input รับเข้า</button>
+                    <button class="pill-filter-btn" data-filter="OUTGOING" onclick="setFilter('OUTGOING', this)">📡 ESP32 ส่งออก</button>
+                </div>
+
+                <!-- Scrollable Activity Stream List (Preserves id="streamFeed") -->
+                <div class="stream-feed-list" id="streamFeed">
+                    <div id="streamEmptyState" style="text-align: center; padding: 40px 10px; color: var(--text-muted);">
+                        <div style="font-size: 2rem; margin-bottom: 8px;">📡</div>
+                        <div style="font-weight: 700; font-size: 0.9rem;">กำลังรอรับข้อมูลจาก ESP32 และ Nexxa AI...</div>
+                        <div style="font-size: 0.76rem; margin-top: 4px;">กิจกรรมเสียง คำสั่ง และการเคลื่อนไหวจะปรากฏขึ้นที่นี่แบบเรียลไทม์</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Right: Team Insights & Time Tracker -->
+            <div class="dash-card">
+                <div class="card-header-flex">
+                    <div>
+                        <h2 class="card-title">Team Insights</h2>
+                        <p class="card-subtitle">ความหนาแน่นของกิจกรรมและเวลาทำงาน</p>
+                    </div>
+                    <button class="btn-options-menu" onclick="showToast('สัญญาณเชื่อมต่อปกติ')">⋮</button>
+                </div>
+
+                <div class="insights-card-inner">
+                    <!-- Equalizer / Histogram Bars -->
+                    <div>
+                        <div class="histogram-bars-wrap" id="histogramWrap">
+                            <div class="hist-bar" style="height: 30%;"></div>
+                            <div class="hist-bar active" style="height: 60%;"></div>
+                            <div class="hist-bar active" style="height: 85%;"></div>
+                            <div class="hist-bar" style="height: 45%;"></div>
+                            <div class="hist-bar active" style="height: 70%;"></div>
+                            <div class="hist-bar active" style="height: 95%;"></div>
+                            <div class="hist-bar" style="height: 40%;"></div>
+                            <div class="hist-bar active" style="height: 65%;"></div>
+                            <div class="hist-bar active" style="height: 80%;"></div>
+                            <div class="hist-bar" style="height: 50%;"></div>
+                            <div class="hist-bar active" style="height: 75%;"></div>
+                            <div class="hist-bar" style="height: 35%;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-muted); margin-top: 4px; font-weight: 600;">
+                            <span>Active Streams</span>
+                            <span id="kpiEventBreakdown">Input: 0 | ESP32: 0</span>
+                        </div>
+                    </div>
+
+                    <!-- Time Tracker (Like Dribbble Timer Box) -->
+                    <div style="margin-top: auto;">
+                        <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; display: block;">Time Tracker</span>
+                        <div class="time-tracker-box">
+                            <div>
+                                <div class="clock-big" id="digitalClock">08:40:20</div>
+                                <div class="clock-sub" id="clockSubText">ESP32 Online | Active Uptime</div>
+                            </div>
+                            <button class="btn-play-pause-circle" id="btnPlaySession" onclick="toggleSessionTracker()" title="เริ่ม/พักการจับเวลา">
+                                ▶
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Voice Audio Quick Test -->
+                    <div style="display: flex; gap: 8px; margin-top: 6px;">
+                        <button class="btn-robot-screen" style="flex: 1; justify-content: center;" onclick="testSpeakPC()">
+                            🔈 PC Speaker
+                        </button>
+                        <button class="btn-robot-screen" style="flex: 1; justify-content: center; background: var(--bg-hover); color: var(--text-secondary); border-color: var(--border-light);" onclick="testStreamTTS()">
+                            🎧 Browser MP3
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Floating Command Center Modal (Opens on "+ Add New Task") -->
+    <div class="modal-overlay" id="commandModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>🚀 ส่งคำสั่งควบคุม ESP32 & จำลองเสียง</h3>
+                <button class="btn-close-modal" onclick="closeCommandModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                
+                <!-- Section 1: PICK Target -->
+                <div>
+                <!-- Section 1: Line Tracking & Navigation -->
+                <div>
+                    <div class="modal-section-title">🚀 ระบบเดินตามเส้น & สถานี (Line Tracking & Stations)</div>
+                    <div class="actions-2col-grid" style="margin-bottom: 8px;">
+                        <button class="btn-modal-action" style="background: rgba(16, 185, 129, 0.08); color: #059669; border-color: rgba(16, 185, 129, 0.3);" onclick="sendActionCommand('START_LINE_TRACK', 'line')">
+                            <span>🚀</span> เริ่มเดินตามเส้น
+                        </button>
+                        <button class="btn-modal-action" style="background: rgba(239, 68, 68, 0.08); color: #dc2626; border-color: rgba(239, 68, 68, 0.3);" onclick="sendActionCommand('STOP_LINE_TRACK', 'line')">
+                            <span>⏹️</span> หยุดเดินตามเส้น
+                        </button>
+                    </div>
+                    <div class="chips-cloud" style="margin-bottom: 6px;">
+                        <div class="target-chip" onclick="sendActionCommand('NAVIGATE_TO', 'station_a')">📍 ไปสถานี A</div>
+                        <div class="target-chip" onclick="sendActionCommand('NAVIGATE_TO', 'station_b')">📍 ไปสถานี B</div>
+                        <div class="target-chip" onclick="sendActionCommand('NAVIGATE_TO', 'pickup_point')">📦 ไปจุดรับของ</div>
+                        <div class="target-chip" onclick="sendActionCommand('NAVIGATE_TO', 'drop_point')">📥 ไปจุดส่งของ</div>
+                        <div class="target-chip" onclick="sendActionCommand('HOME')">🏠 กลับฐานชาร์จ</div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Robotic Arm & Object Handling -->
+                <div>
+                    <div class="modal-section-title">🦾 แขนกล & วัตถุ (Robotic Arm: Pick / Place / Move)</div>
+                    <div class="chips-cloud" style="margin-bottom: 8px;">
+                        <div class="target-chip active" onclick="selectChip(this, 'ขวดน้ำ')">ขวดน้ำ</div>
+                        <div class="target-chip" onclick="selectChip(this, 'กล่องพัสดุ')">กล่องพัสดุ</div>
+                        <div class="target-chip" onclick="selectChip(this, 'ปากกา')">ปากกา</div>
+                        <div class="target-chip" onclick="selectChip(this, 'แก้วน้ำ')">แก้วน้ำ</div>
+                        <div class="target-chip" onclick="selectChip(this, 'เอกสาร')">เอกสาร</div>
+                    </div>
+                    <div class="input-inline-row" style="margin-bottom: 8px;">
+                        <input type="text" id="targetInput" class="text-input-field" value="ขวดน้ำ" placeholder="ระบุสิ่งของ..." onkeydown="if(event.key==='Enter') sendActionCommand('PICK')">
+                        <button class="btn-submit-action" onclick="sendActionCommand('PICK')">หยิบของ</button>
+                        <button class="btn-submit-action" style="background: #8b5cf6;" onclick="sendActionCommand('PLACE')">วางของ</button>
+                    </div>
+                </div>
+
+                <!-- Section 3: Safety Fault Simulators (ขอบเขตข้อ 7) -->
+                <div>
+                    <div class="modal-section-title">🚨 ระบบความปลอดภัย & แจ้งเตือนเหตุขัดข้อง (Safety Alerts)</div>
+                    <div class="actions-2col-grid">
+                        <button class="btn-modal-action danger" onclick="sendActionCommand('SAFETY_ALERT', 'obstacle')">
+                            <span>⚠️</span> สิ่งกีดขวาง (Obstacle)
+                        </button>
+                        <button class="btn-modal-action danger" onclick="sendActionCommand('SAFETY_ALERT', 'object_dropped')">
+                            <span>⚠️</span> วัตถุหลุดจากแขนกล
+                        </button>
+                        <button class="btn-modal-action danger" onclick="sendActionCommand('SAFETY_ALERT', 'line_off_track')">
+                            <span>⚠️</span> ออกนอกเส้นทาง
+                        </button>
+                        <button class="btn-modal-action danger" onclick="sendActionCommand('STOP')">
+                            <span>🛑</span> STOP (หยุดฉุกเฉิน)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section 3.5: ESP32 Hardware Task Feedback Simulators (ขอบเขตข้อ 5) -->
+                <div>
+                    <div class="modal-section-title">🤖 จำลองสถานะตอบกลับจาก ESP32 (Hardware Task Feedback)</div>
+                    <div style="font-size: 0.78rem; color: #64748b; margin-bottom: 8px;">จำลองเซนเซอร์หรือแขนกล ESP32 ส่งผลการหยิบ/ภารกิจกลับมาให้ AI Brain:</div>
+                    <div class="actions-2col-grid">
+                        <button class="btn-modal-action" style="background: rgba(16, 185, 129, 0.08); color: #059669; border-color: rgba(16, 185, 129, 0.3);" onclick="sendTaskFeedback('PICK', 'success', 'ขวดน้ำ', 'sensor_confirmed')">
+                            <span>✅</span> หยิบขวดน้ำสำเร็จ
+                        </button>
+                        <button class="btn-modal-action" style="background: rgba(239, 68, 68, 0.08); color: #dc2626; border-color: rgba(239, 68, 68, 0.3);" onclick="sendTaskFeedback('PICK', 'failed', 'ขวดน้ำ', 'gripper_empty')">
+                            <span>❌</span> หยิบขวดน้ำไม่สำเร็จ
+                        </button>
+                        <button class="btn-modal-action" style="background: rgba(59, 130, 246, 0.08); color: #2563eb; border-color: rgba(59, 130, 246, 0.3);" onclick="sendTaskFeedback('NAVIGATE_TO', 'success', 'สถานี A', 'reached_station_a')">
+                            <span>📍</span> ถึงสถานี A
+                        </button>
+                        <button class="btn-modal-action" style="background: rgba(16, 185, 129, 0.08); color: #059669; border-color: rgba(16, 185, 129, 0.3);" onclick="sendTaskFeedback('START_LINE_TRACK', 'success', 'line', 'line_track_completed')">
+                            <span>🏁</span> เดินตามเส้นเสร็จสิ้น
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section 4: Text Communication (ขอบเขตข้อ 1) -->
+                <div>
+                    <div class="modal-section-title">💬 สื่อสารด้วยข้อความ (Text Chat Communication)</div>
+                    <div class="input-inline-row">
+                        <input type="text" id="chatTextInput" class="text-input-field" placeholder="พิมพ์คำสั่งสั่งงานหุ่นยนต์..." onkeydown="if(event.key==='Enter') sendTextMessage()">
+                        <button class="btn-submit-action" style="background: var(--primary-blue);" onclick="sendTextMessage()">ส่งข้อความ</button>
+                    </div>
+                </div>
+
+                <!-- Section 5: Voice Simulation -->
+                <div>
+                    <div class="modal-section-title">🎙️ จำลองคำพูดผู้ใช้ (Voice Pipeline Simulation)</div>
+                    <div class="chips-cloud" style="margin-bottom: 8px;">
+                        <div class="target-chip" onclick="setSimInput('nexxa')">ปลุก "nexxa"</div>
+                        <div class="target-chip" onclick="setSimInput('hello nexxa เริ่มเดินตามเส้น')">เริ่มเดินตามเส้น</div>
+                        <div class="target-chip" onclick="setSimInput('hello nexxa ไปสถานี B')">ไปสถานี B</div>
+                        <div class="target-chip" onclick="setSimInput('hello nexxa ย้ายขวดน้ำไปสถานี B')">ย้ายขวดน้ำไป B</div>
+                        <div class="target-chip" onclick="setSimInput('hello nexxa วางขวดน้ำ')">วางขวดน้ำ</div>
+                        <div class="target-chip" onclick="setSimInput('hello nexxa ช่วยหยิบหน่อย')">คำสั่งไม่ชัดเจน</div>
+                        <div class="target-chip" onclick="setSimInput('hello nexxa สิ่งกีดขวาง')">สิ่งกีดขวาง</div>
+                        <div class="target-chip" onclick="setSimInput('hello nexxa เช็คสถานะ')">เช็คสถานะ</div>
+                    </div>
+                    <div class="input-inline-row">
+                        <input type="text" id="simVoiceInput" class="text-input-field" value="hello nexxa เริ่มเดินตามเส้น" placeholder="จำลองคำพูด เช่น 'hello nexxa เริ่มเดินตามเส้น'" onkeydown="if(event.key==='Enter') simulateVoiceInput()">
+                        <button class="btn-submit-action" style="background: var(--accent-purple);" onclick="simulateVoiceInput()">ส่งจำลอง</button>
+                    </div>
+                </div>
+
+                <!-- Section 6: Direct Actions Grid -->
+                <div>
+                    <div class="modal-section-title">⚡ คำสั่งเสริม (Auxiliary Actions)</div>
+                    <div class="actions-2col-grid">
+                        <button class="btn-modal-action" onclick="sendActionCommand('CheckStatus')">
+                            <span>🔍</span> CheckStatus
+                        </button>
+                        <button class="btn-modal-action" onclick="sendActionCommand('AnswerQuestion')">
+                            <span>💬</span> AnswerQuestion
+                        </button>
+                        <button class="btn-modal-action" onclick="sendActionCommand('StopQA')" style="grid-column: span 2;">
+                            <span>⏹️</span> StopQA (ให้หยุดตอบ)
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">แจ้งเตือน</div>
+
+    <script>
+        // State
+        let allEvents = [];
+        let currentFilter = 'ALL';
+        let autoScroll = true;
+        let eventSource = null;
+        let audioPlayer = null;
+
+        // Stats counters
+        let countIn = 0;
+        let countOut = 0;
+        let countAudio = 0;
+
+        // Digital session timer
+        let sessionSeconds = 0;
+        let sessionInterval = null;
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 2600);
+        }
+
+        function formatTime(isoOrNow) {
+            const d = isoOrNow ? new Date(isoOrNow) : new Date();
+            const h = String(d.getHours()).padStart(2, '0');
+            const m = String(d.getMinutes()).padStart(2, '0');
+            const s = String(d.getSeconds()).padStart(2, '0');
+            return `${h}:${m}:${s}`;
+        }
+
+        // Connect SSE Stream
+        function initEventStream() {
+            const badge = document.getElementById('streamStatusBadge');
+            const badgeText = document.getElementById('streamStatusText');
+
+            if (window.EventSource) {
+                eventSource = new EventSource('/api/events/stream');
+
+                eventSource.onopen = () => {
+                    if (badge) badge.classList.remove('reconnecting');
+                    if (badgeText) badgeText.innerText = 'SSE LIVE';
+                };
+
+                eventSource.onmessage = (e) => {
+                    if (e.data && e.data.trim().startsWith('{')) {
+                        try {
+                            const event = JSON.parse(e.data);
+                            addEventToFeed(event);
+                        } catch (err) {
+                            console.error('JSON parse error:', err);
+                        }
+                    }
+                };
+
+                eventSource.onerror = () => {
+                    if (badge) badge.classList.add('reconnecting');
+                    if (badgeText) badgeText.innerText = 'POLLING';
+                    setTimeout(fetchHistoricalEvents, 3000);
+                };
+            } else {
+                if (badge) badge.classList.add('reconnecting');
+                if (badgeText) badgeText.innerText = 'POLLING';
+                setInterval(fetchHistoricalEvents, 2500);
+            }
+        }
+
+        async function fetchHistoricalEvents() {
+            try {
+                const res = await fetch('/api/events');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.events && Array.isArray(data.events)) {
+                        const reversed = [...data.events].reverse();
+                        for (const ev of reversed) {
+                            if (!allEvents.some(item => item.id === ev.id)) {
+                                addEventToFeed(ev);
+                            }
+                        }
+                    }
+                }
+            } catch (e) {}
+        }
+
+        function isInputOrEsp32(ev) {
+            if (!ev) return false;
+            // 1. ESP32 Hardware Command (Outgoing to ESP32)
+            if (ev.type === 'HARDWARE_COMMAND' || (ev.direction === 'OUTGOING' && ev.action)) {
+                return true;
+            }
+            // 2. User Input / Voice (Incoming from User)
+            if (ev.type === 'USER_INPUT' || ev.type === 'SIMULATED_VOICE') {
+                return true;
+            }
+            // 3. User spoken transcript or incoming speech
+            if (ev.direction === 'INCOMING' && (ev.transcript || (ev.badge && ev.badge.includes('INPUT')))) {
+                return true;
+            }
+            // 4. Robot Task Result / Status feedback from ESP32
+            if (ev.type === 'ROBOT_TASK_RESULT') {
+                return true;
+            }
+            return false;
+        }
+
+        function addEventToFeed(ev) {
+            if (ev.type === 'SYSTEM_PING') return;
+            // กรองแสดงเฉพาะ Input ที่เข้ามา และคำสั่งที่ส่งออกไปให้ ESP32 เท่านั้น
+            if (!isInputOrEsp32(ev)) return;
+            if (ev.id && allEvents.some(item => item.id === ev.id)) return;
+
+            allEvents.push(ev);
+            updateKPIs(ev);
+
+            const feed = document.getElementById('streamFeed');
+            const empty = document.getElementById('streamEmptyState');
+            if (empty) empty.style.display = 'none';
+
+            if (!matchesFilter(ev, currentFilter)) return;
+
+            const card = renderEventCard(ev);
+            feed.appendChild(card);
+
+            if (autoScroll) {
+                feed.scrollTop = feed.scrollHeight;
+            }
+        }
+
+        function matchesFilter(ev, filter) {
+            if (!isInputOrEsp32(ev)) return false;
+            if (filter === 'ALL') return true;
+            if (filter === 'INCOMING') {
+                return ev.direction === 'INCOMING' || ev.type === 'USER_INPUT' || ev.type === 'SIMULATED_VOICE' || ev.type === 'ROBOT_TASK_RESULT';
+            }
+            if (filter === 'OUTGOING') {
+                return ev.direction === 'OUTGOING' || ev.type === 'HARDWARE_COMMAND';
+            }
+            return false;
+        }
+
+        function renderEventCard(ev) {
+            const div = document.createElement('div');
+            div.className = 'activity-item';
+
+            const isInput = ev.direction === 'INCOMING' || ev.type === 'USER_INPUT' || ev.type === 'SIMULATED_VOICE';
+            let iconEmoji = '📡';
+            let badgeClass = 'badge-out';
+            let dirLabel = 'ESP32';
+            let title = '';
+            let bodyText = '';
+
+            if (ev.type === 'ROBOT_TASK_RESULT') {
+                const isSuccess = (ev.status === 'success' || ev.status === 'completed');
+                iconEmoji = isSuccess ? '✅' : '❌';
+                badgeClass = isSuccess ? 'badge-in' : 'badge-out';
+                dirLabel = 'ESP32 FEEDBACK';
+                title = `🤖 ผลการปฏิบัติงาน ESP32: [${ev.action}] - ${isSuccess ? 'สำเร็จ (SUCCESS)' : 'ไม่สำเร็จ (FAILED)'}`;
+                bodyText = `
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 2px;">
+                        <span>Action: <strong style="color: ${isSuccess ? '#059669' : '#dc2626'}; font-size: 0.96rem;">${ev.action}</strong></span>
+                        ${ev.target ? `<span>| เป้าหมาย: <strong style="color: #0f172a;">${ev.target}</strong></span>` : ''}
+                        <span style="background: ${isSuccess ? '#d1fae5' : '#fee2e2'}; color: ${isSuccess ? '#065f46' : '#991b1b'}; padding: 2px 8px; border-radius: 9999px; font-size: 0.72rem; font-weight: 700;">${(ev.status || '').toUpperCase()}</span>
+                        ${ev.detail ? `<span style="font-size: 0.8rem; color: #64748b;">(${ev.detail})</span>` : ''}
+                    </div>
+                `;
+            } else if (isInput) {
+                iconEmoji = '🗣️';
+                badgeClass = 'badge-in';
+                dirLabel = 'INPUT';
+                title = ev.badge || '🗣️ INPUT (คำพูดรับเข้า)';
+                const transcript = ev.transcript || ev.text || ev.message || '';
+                const cleanText = transcript
+                    .replace(/^ผู้ใช้พูด:\s*"?/, '')
+                    .replace(/"?$/, '')
+                    .replace(/^จำลองคำพูดมนุษย์:\s*"?/, '')
+                    .replace(/^"|"$/g, '');
+                bodyText = `<div style="font-size: 0.96rem; font-weight: 600; color: #0f172a;">"${cleanText}"</div>`;
+            } else {
+                iconEmoji = '🚀';
+                badgeClass = 'badge-out';
+                dirLabel = 'ESP32';
+                title = `📡 ส่งคำสั่งฮาร์ดแวร์ ESP32 [${ev.action}]`;
+                bodyText = `
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 2px;">
+                        <span>คำสั่ง Action: <strong style="color: #0284c7; font-size: 0.96rem;">${ev.action}</strong></span>
+                        ${ev.target ? `<span>| สิ่งของ (Target): <strong style="color: #0f172a;">${ev.target}</strong></span>` : ''}
+                        <span style="background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 9999px; font-size: 0.72rem; font-weight: 700;">${(ev.robot_status || 'SENT').toUpperCase()}</span>
+                    </div>
+                `;
+            }
+
+            const timeStr = formatTime(ev.timestamp);
+            const jsonId = 'json-' + Math.random().toString(36).substr(2, 6);
+
+            div.innerHTML = `
+                <div class="activity-icon-wrap">${iconEmoji}</div>
+                <div class="activity-content">
+                    <div class="activity-title-row">
+                        <span class="activity-title">${title}</span>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span class="activity-badge ${badgeClass}">${dirLabel}</span>
+                            <span class="activity-time">${timeStr}</span>
+                        </div>
+                    </div>
+                    <div class="activity-desc">${bodyText}</div>
+                    <div>
+                        <span class="details-toggle-btn" onclick="toggleJson('${jsonId}', this)">▶ ดูข้อมูล JSON ละเอียด</span>
+                        <pre class="json-details-pre" id="${jsonId}">${JSON.stringify(ev, null, 2)}</pre>
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        function toggleJson(id, btn) {
+            const elem = document.getElementById(id);
+            if (elem) {
+                elem.classList.toggle('open');
+                const isOpen = elem.classList.contains('open');
+                if (btn) {
+                    btn.innerText = isOpen ? '▼ ซ่อนข้อมูล JSON' : '▶ ดูข้อมูล JSON ละเอียด';
+                }
+            }
+        }
+
+        function updateKPIs(ev) {
+            const isInput = ev.direction === 'INCOMING' || ev.type === 'USER_INPUT' || ev.type === 'SIMULATED_VOICE';
+            const isEsp32 = ev.direction === 'OUTGOING' || ev.type === 'HARDWARE_COMMAND';
+
+            if (isInput) countIn++;
+            if (isEsp32) countOut++;
+
+            const breakdown = document.getElementById('kpiEventBreakdown');
+            if (breakdown) breakdown.innerText = `Input: ${countIn} | ESP32: ${countOut}`;
+
+            const statePill = document.getElementById('statePill');
+
+            if (ev.type === 'HARDWARE_COMMAND') {
+                if (statePill) statePill.innerText = (ev.robot_status || 'IDLE').toUpperCase();
+                const kpiLast = document.getElementById('kpiLastAction');
+                if (kpiLast) kpiLast.innerText = `คำสั่งล่าสุด: ${ev.action} ${ev.target ? `(${ev.target})` : ''}`;
+                const statDone = document.getElementById('statDoneCount');
+                if (statDone) statDone.innerText = countOut;
+            } else if (typeof ev.isQAMode !== 'undefined' && ev.isQAMode) {
+                if (statePill) statePill.innerText = 'QA MODE';
+            } else if (typeof ev.isAwake !== 'undefined') {
+                if (statePill) statePill.innerText = ev.isAwake ? 'AWAKE (15s)' : 'STANDBY';
+            }
+        }
+
+        async function sendActionCommand(action, customTarget) {
+            let target = customTarget || '';
+            if (!target) {
+                if (action === 'PICK' || action === 'PLACE') {
+                    const targetEl = document.getElementById('targetInput');
+                    target = (targetEl && targetEl.value.trim()) || 'ขวดน้ำ';
+                }
+            }
+
+            try {
+                const url = `/command?action=${encodeURIComponent(action)}&target=${encodeURIComponent(target)}&fromDashboard=1`;
+                const res = await fetch(url, {
+                    headers: { 'X-From-Dashboard': '1' }
+                });
+                const data = await res.json();
+                const targetText = target ? ` (${target})` : '';
+                showToast(`⚡ ส่งคำสั่ง ${action}${targetText} ไปยังหน้าจอ UI เรียบร้อยแล้ว`);
+                closeCommandModal();
+            } catch (err) {
+                showToast(`ส่งคำสั่งขัดข้อง: ${err.message}`);
+            }
+        }
+
+        async function sendTaskFeedback(action, status, target, detail = '') {
+            try {
+                const res = await fetch('/api/robot_status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: action,
+                        status: status,
+                        target: target,
+                        detail: detail,
+                        device: 'DASHBOARD_SIMULATOR'
+                    })
+                });
+                const data = await res.json();
+                const icon = status === 'success' ? '✅' : '❌';
+                showToast(`${icon} จำลองสถานะตอบกลับ: ${action} (${status}) -> ส่งไปยัง AI Brain เรียบร้อย`);
+                closeCommandModal();
+            } catch (err) {
+                showToast(`ส่งผลลัพธ์ขัดข้อง: ${err.message}`);
+            }
+        }
+
+        async function sendTextMessage() {
+            const input = document.getElementById('chatTextInput');
+            const text = input ? input.value.trim() : '';
+            if (!text) return;
+            try {
+                // ส่ง Telemetry ว่าเป็นการสื่อสารข้อความรับเข้า (ขอบเขตข้อ 1)
+                await fetch('/api/log', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'USER_INPUT',
+                        direction: 'INCOMING',
+                        badge: '💬 USER CHAT (ข้อความ)',
+                        message: text,
+                        transcript: text
+                    })
+                });
+
+                // ส่งไปยัง Robot UI ให้ AI ประมวลผลและตอบกลับ
+                const simUrl = `/command?action=SIMULATE_VOICE&transcript=${encodeURIComponent(text)}&fromDashboard=1`;
+                await fetch(simUrl, { headers: { 'X-From-Dashboard': '1' } });
+                showToast(`💬 ส่งข้อความไปยัง AI: "${text}"`);
+                input.value = '';
+                closeCommandModal();
+            } catch (e) {
+                showToast(`ส่งข้อความขัดข้อง: ${e.message}`);
+            }
+        }
+
+        function selectChip(el, name) {
+            if (el && el.parentElement) {
+                el.parentElement.querySelectorAll('.target-chip').forEach(c => c.classList.remove('active'));
+                el.classList.add('active');
+            }
+            document.getElementById('targetInput').value = name;
+        }
+
+        function setSimInput(text) {
+            document.getElementById('simVoiceInput').value = text;
+        }
+
+        async function testSpeakPC() {
+            const text = document.getElementById('ttsInput').value.trim() || 'สวัสดีค่ะ เน็กซ่าพร้อมรับคำสั่งค่ะ';
+            try {
+                const res = await fetch(`/speak?text=${encodeURIComponent(text)}`);
+                const data = await res.json();
+                showToast(`เล่นเสียงออกลำโพงพีซี: ${data.duration_ms} ms`);
+            } catch (e) {
+                showToast(`เล่นเสียงขัดข้อง: ${e.message}`);
+            }
+        }
+
+        function testStreamTTS() {
+            const text = document.getElementById('ttsInput').value.trim() || 'สวัสดีค่ะ เน็กซ่าพร้อมรับคำสั่งค่ะ';
+            if (audioPlayer) {
+                audioPlayer.pause();
+                audioPlayer = null;
+            }
+            audioPlayer = new Audio(`/tts?text=${encodeURIComponent(text)}`);
+            audioPlayer.play().then(() => {
+                showToast('กำลังสตรีม MP3 บนเบราว์เซอร์...');
+            }).catch(e => {
+                showToast(`เล่นเสียงไม่สำเร็จ: ${e.message}`);
+            });
+        }
+
+        async function simulateVoiceInput() {
+            const text = document.getElementById('simVoiceInput').value.trim();
+            if (!text) return;
+
+            try {
+                await fetch('/api/log', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'SIMULATED_VOICE',
+                        direction: 'INCOMING',
+                        badge: '🗣️ VOICE SIMULATION',
+                        message: `จำลองคำพูดมนุษย์: "${text}"`,
+                        transcript: text,
+                        fromDashboard: true,
+                        simulated: true
+                    })
+                });
+                showToast(`ส่งคำพูดจำลอง: "${text}"`);
+                closeCommandModal();
+            } catch (e) {
+                showToast('ส่งไม่สำเร็จ: ' + e.message);
+            }
+        }
+
+        function setFilter(type, btnElem) {
+            currentFilter = type;
+            document.querySelectorAll('.pill-filter-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = btnElem || document.querySelector(`.pill-filter-btn[data-filter="${type}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            const feed = document.getElementById('streamFeed');
+            feed.innerHTML = '';
+            const filtered = allEvents.filter(ev => matchesFilter(ev, type));
+            if (filtered.length === 0) {
+                feed.innerHTML = `
+                    <div style="text-align: center; padding: 40px 10px; color: var(--text-muted);">
+                        <div style="font-size: 1.8rem; margin-bottom: 6px;">🔍</div>
+                        <div style="font-weight: 600;">ไม่พบรายการสำหรับตัวกรอง "${type}"</div>
+                    </div>
+                `;
+            } else {
+                for (const ev of filtered) {
+                    feed.appendChild(renderEventCard(ev));
+                }
+                if (autoScroll) feed.scrollTop = feed.scrollHeight;
+            }
+        }
+
+        function toggleAutoScroll() {
+            autoScroll = !autoScroll;
+            const btn = document.getElementById('btnPauseScroll');
+            if (autoScroll) {
+                btn.innerText = '⏸️ Auto';
+                btn.classList.remove('active');
+                const feed = document.getElementById('streamFeed');
+                feed.scrollTop = feed.scrollHeight;
+            } else {
+                btn.innerText = '▶️ Manual';
+                btn.classList.add('active');
+            }
+        }
+
+        async function clearEventStream() {
+            try {
+                await fetch('/api/events/clear', { method: 'POST' });
+                allEvents = [];
+                countIn = 0;
+                countOut = 0;
+                countAudio = 0;
+                document.getElementById('kpiEventBreakdown').innerText = 'In: 0 | Out: 0 | Audio: 0';
+                const feed = document.getElementById('streamFeed');
+                feed.innerHTML = `
+                    <div id="streamEmptyState" style="text-align: center; padding: 40px 10px; color: var(--text-muted);">
+                        <div style="font-size: 2rem; margin-bottom: 8px;">📡</div>
+                        <div style="font-weight: 700; font-size: 0.9rem;">ล้างสตรีมเรียบร้อยแล้ว</div>
+                    </div>
+                `;
+                showToast('ล้างข้อมูลสตรีมเรียบร้อย');
+            } catch (e) {
+                showToast('ล้างข้อมูลขัดข้อง');
+            }
+        }
+
+        function exportEventsJson() {
+            if (!allEvents || allEvents.length === 0) {
+                showToast('ไม่มีข้อมูลประวัติให้บันทึก');
+                return;
+            }
+            try {
+                const blob = new Blob([JSON.stringify(allEvents, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const downloadAnchor = document.createElement('a');
+                downloadAnchor.href = url;
+                downloadAnchor.download = `nexxa_telemetry_${Date.now()}.json`;
+                document.body.appendChild(downloadAnchor);
+                downloadAnchor.click();
+                downloadAnchor.remove();
+                URL.revokeObjectURL(url);
+                showToast('ดาวน์โหลดประวัติข้อมูลเป็น JSON แล้ว');
+            } catch (e) {
+                showToast('บันทึกไฟล์ไม่สำเร็จ: ' + e.message);
+            }
+        }
+
+        async function checkESP32Ping() {
+            const startTime = performance.now();
+            try {
+                const res = await fetch('/status');
+                const latency = Math.round(performance.now() - startTime);
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('labelGatewayLatency').innerText = `~${latency}ms (Online)`;
+                    document.getElementById('timelineEspStatus').innerText = `Online ${latency}ms`;
+                }
+            } catch (e) {
+                document.getElementById('labelGatewayLatency').innerText = `OFFLINE`;
+            }
+        }
+
+        // Digital Clock / Session Tracker
+        function updateDigitalClock() {
+            const d = new Date();
+            const h = String(d.getHours()).padStart(2, '0');
+            const m = String(d.getMinutes()).padStart(2, '0');
+            const s = String(d.getSeconds()).padStart(2, '0');
+            document.getElementById('digitalClock').innerText = `${h}:${m}:${s}`;
+        }
+
+        function toggleSessionTracker() {
+            const btn = document.getElementById('btnPlaySession');
+            if (sessionInterval) {
+                clearInterval(sessionInterval);
+                sessionInterval = null;
+                btn.innerText = '▶';
+                showToast('พักการนับเวลา');
+            } else {
+                sessionInterval = setInterval(updateDigitalClock, 1000);
+                btn.innerText = '⏸';
+                showToast('กำลังจับเวลาเรียลไทม์');
+            }
+        }
+
+        // Modal Controls
+        function openCommandModal() {
+            document.getElementById('commandModal').classList.add('show');
+        }
+
+        function closeCommandModal() {
+            document.getElementById('commandModal').classList.remove('show');
+        }
+
+        function openVoiceModal() {
+            openCommandModal();
+            setTimeout(() => {
+                const input = document.getElementById('simVoiceInput');
+                if (input) input.focus();
+            }, 150);
+        }
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function switchNavTab(btn, tab) {
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            btn.classList.add('active');
+            if (tab === 'dash') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initEventStream();
+            fetchHistoricalEvents();
+            checkESP32Ping();
+            setInterval(checkESP32Ping, 5000);
+            updateDigitalClock();
+            sessionInterval = setInterval(updateDigitalClock, 1000);
+        });
+    </script>
+</body>
+</html>

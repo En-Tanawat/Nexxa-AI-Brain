@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#05070d">
+    <title>Nexxa AI Robot</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="robot-screen" id="robotScreen">
+        <!-- Floating HUD Banner for Dashboard Actions -->
+        <div id="actionBanner" class="action-banner"></div>
+
+        <!-- Robot Face SVG (ตรงตามภาพ ai_ui.png 100%) -->
+        <svg id="robotFaceSvg" viewBox="0 0 480 270" class="robot-face-svg">
+            <defs>
+                <!-- Cyan Neon Glow Filter -->
+                <filter id="robotGlow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur1"/>
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur2"/>
+                    <feMerge>
+                        <feMergeNode in="blur2"/>
+                        <feMergeNode in="blur1"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+
+            <!-- Vector Face Group (Cyan Glow) -->
+            <g id="faceGroup" filter="url(#robotGlow)" stroke="#4ee5f2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Left Eye (Tilted slightly clockwise 6deg) -->
+                <g id="leftEyeGroup">
+                    <path id="leftEyeUpper" d="M 122,136 A 41 48 0 0 1 204,136" stroke-width="12"/>
+                    <path id="leftEyeLower" d="M 122,146 A 41 48 0 0 0 204,146" stroke-width="12"/>
+                </g>
+
+                <!-- Right Eye (Tilted slightly counter-clockwise -8deg, slightly higher) -->
+                <g id="rightEyeGroup">
+                    <path id="rightEyeUpper" d="M 313,120 A 40 48 0 0 1 393,120" stroke-width="12"/>
+                    <path id="rightEyeLower" d="M 313,130 A 40 48 0 0 0 393,130" stroke-width="12"/>
+                </g>
+
+                <!-- Mouth (Cute smile matching ai_ui.png, animates when talking) -->
+                <path id="robotMouth" d="M 222,212 Q 258,222 294,212" stroke-width="9"/>
+            </g>
+        </svg>
+    </div>
+
+    <!-- Modular Component Architecture -->
+    <script src="js/config.js"></script>
+    <script src="js/face.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/nlp.js"></script>
+    <script src="js/gemini.js"></script>
+    <script src="js/esp32.js"></script>
+    <script src="js/speech.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

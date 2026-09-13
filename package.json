@@ -1,0 +1,21 @@
+{
+  "name": "rexza-esp32-robot",
+  "version": "2.0.0",
+  "description": "Rexza AI Voice Robot Controller & Server (Node.js)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/test_system.js",
+    "test:all": "node tests/run_all.js",
+    "test:scope": "node tests/test_nexxa_mission_scope.js",
+    "test:speech": "node tests/test_speech_production.js",
+    "test:dashboard": "node tests/test_dashboard_action_sync.js"
+  },
+  "dependencies": {
+    "@andresaya/edge-tts": "^1.8.0",
+    "koffi": "^3.2.1"
+  },
+  "keywords": ["esp32", "robot", "tts", "gemini", "voice-control"],
+  "author": "Rexza",
+  "license": "MIT"
+}

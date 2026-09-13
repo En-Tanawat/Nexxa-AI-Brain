@@ -1,0 +1,198 @@
+/* =============================================================
+   REXZA AI ROBOT - OLED DISPLAY & AURA STYLESHEET
+   ============================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #05070d;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    touch-action: manipulation;
+}
+
+/* Fullscreen OLED Canvas Frame */
+.robot-screen {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 50%, #0d121c 0%, #05070d 85%);
+    transition: box-shadow 0.4s ease;
+}
+
+/* Nexxa Neon Edge Aura Glow (Listening Window) */
+.robot-screen.listening-active,
+.robot-screen.siri-active {
+    box-shadow: inset 0 0 60px rgba(0, 240, 255, 0.4), inset 0 0 110px rgba(168, 85, 247, 0.3);
+    animation: siriBorderPulse 2.2s ease-in-out infinite alternate;
+}
+
+/* Continuous Q&A Mode Edge Aura Glow (Violet & Neon Cyan) */
+.robot-screen.qa-active {
+    box-shadow: inset 0 0 70px rgba(168, 85, 247, 0.55), inset 0 0 120px rgba(0, 240, 255, 0.4);
+    animation: qaBorderPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes qaBorderPulse {
+    0% {
+        box-shadow: inset 0 0 50px rgba(168, 85, 247, 0.45), inset 0 0 90px rgba(56, 189, 248, 0.35);
+    }
+    100% {
+        box-shadow: inset 0 0 95px rgba(168, 85, 247, 0.7), inset 0 0 145px rgba(16, 185, 129, 0.5);
+    }
+}
+
+@keyframes siriBorderPulse {
+    0% {
+        box-shadow: inset 0 0 45px rgba(0, 240, 255, 0.35), inset 0 0 90px rgba(168, 85, 247, 0.25);
+    }
+    50% {
+        box-shadow: inset 0 0 75px rgba(16, 242, 185, 0.45), inset 0 0 120px rgba(56, 189, 248, 0.35);
+    }
+    100% {
+        box-shadow: inset 0 0 85px rgba(168, 85, 247, 0.45), inset 0 0 140px rgba(78, 229, 242, 0.4);
+    }
+}
+
+/* Subtle OLED Scanline Effect */
+.robot-screen::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.12) 0px, rgba(0, 0, 0, 0.12) 1px, transparent 1px, transparent 3px);
+    pointer-events: none;
+    opacity: 0.5;
+    z-index: 10;
+}
+
+/* Robot Face SVG (Auto-scales on Phone/Tablet Portrait & Landscape) */
+.robot-face-svg {
+    width: 90vw;
+    max-width: 820px;
+    height: auto;
+    max-height: 85dvh;
+    display: block;
+    z-index: 2;
+    animation: faceFloat 4.2s ease-in-out infinite alternate;
+    filter: drop-shadow(0 0 25px rgba(78, 229, 242, 0.3));
+    transition: filter 0.4s ease, transform 0.3s ease;
+}
+
+/* Mobile Portrait View */
+@media (orientation: portrait) {
+    .robot-face-svg {
+        width: 96vw;
+        max-width: 520px;
+        max-height: 65dvh;
+    }
+}
+
+/* Mobile Landscape View */
+@media (orientation: landscape) {
+    .robot-face-svg {
+        width: 86vw;
+        max-width: 840px;
+        max-height: 88dvh;
+    }
+}
+
+/* Minimalist Mobile Wake Prompt */
+.tap-prompt {
+    position: absolute;
+    bottom: 24px;
+    color: rgba(78, 229, 242, 0.45);
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    z-index: 20;
+    font-weight: 300;
+    text-transform: uppercase;
+    animation: promptPulse 2.5s infinite ease-in-out;
+}
+
+@keyframes promptPulse {
+    0%, 100% { opacity: 0.35; transform: scale(0.98); }
+    50% { opacity: 0.85; transform: scale(1.02); }
+}
+
+/* Eye Blinking Animations */
+#leftEyeGroup {
+    transform-origin: 163px 141px;
+    animation: leftEyeBlink 4.6s infinite ease-in-out;
+    transition: transform 0.15s ease;
+}
+
+#rightEyeGroup {
+    transform-origin: 353px 125px;
+    animation: rightEyeBlink 4.6s infinite ease-in-out;
+    transition: transform 0.15s ease;
+}
+
+@keyframes leftEyeBlink {
+    0%, 93%, 100% { transform: rotate(6deg) scaleY(1); }
+    95.5% { transform: rotate(6deg) scaleY(0.08); }
+    98% { transform: rotate(6deg) scaleY(1); }
+}
+
+@keyframes rightEyeBlink {
+    0%, 93%, 100% { transform: rotate(-8deg) scaleY(1); }
+    95.5% { transform: rotate(-8deg) scaleY(0.08); }
+    98% { transform: rotate(-8deg) scaleY(1); }
+}
+
+@keyframes faceFloat {
+    0% { transform: translateY(-3px) scale(0.995); }
+    100% { transform: translateY(4px) scale(1.005); }
+}
+
+/* Mouth */
+#robotMouth {
+    transform-origin: 258px 212px;
+    transition: d 0.1s ease;
+}
+
+/* Floating Action HUD Banner for Dashboard Interaction */
+.action-banner {
+    position: absolute;
+    top: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-25px);
+    background: rgba(10, 15, 26, 0.92);
+    border: 1px solid rgba(0, 240, 255, 0.7);
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.4), inset 0 0 15px rgba(0, 240, 255, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #00f0ff;
+    padding: 10px 26px;
+    border-radius: 9999px;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+    z-index: 100;
+}
+
+.action-banner.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
